@@ -1,0 +1,94 @@
+{
+	"info": {
+		"_postman_id": "d437f515-3893-4637-8fab-c4fc457b2e34",
+		"name": "DTIC Sitemaps",
+		"description": "Some sitemap requests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "addLocations",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"urls\": [\r\n        {\r\n            \"location\": \"https://apps.dtic.mil/docs/citations/AD0245212\",\r\n            \"name\": \"AD0245212\"\r\n        },\r\n        {\r\n            \"location\": \"https://apps.dtic.mil/docs/citations/AD1001121\"\r\n        },\r\n        {\r\n            \"location\": \"https://apps.dtic.mil/docs/citations/AD1001411\",\r\n            \"name\": \"AD1001411\",\r\n            \"changeFrequency\": \"monthly\",\r\n            \"priority\": \"0.9\"\r\n        }\r\n    ]\r\n}"
+				},
+				"url": {
+					"raw": "{{sitemap-manager-host}}/sitemap-manager",
+					"host": [
+						"{{sitemap-manager-host}}"
+					],
+					"path": [
+						"sitemap-manager"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateLocations",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"urls\": [\r\n        {\r\n            \"location\": \"https://apps.dtic.mil/docs/citations/AD0245212\",\r\n            \"name\": \"AD0245212\",\r\n            \"changeFrequency\": \"monthly\",\r\n            \"priority\": \"0.8\"\r\n        },\r\n        {\r\n            \"location\": \"https://apps.dtic.mil/docs/citations/AD1001121\",\r\n            \"priority\": \"0.3\"\r\n        },\r\n        {\r\n            \"location\": \"https://apps.dtic.mil/docs/citations/AD1001411\",\r\n            \"name\": \"AD1001411\",\r\n            \"changeFrequency\": \"yearly\",\r\n            \"priority\": \"0.2\"\r\n        }\r\n    ]\r\n}"
+				},
+				"url": {
+					"raw": "{{sitemap-manager-host}}/sitemap-manager",
+					"host": [
+						"{{sitemap-manager-host}}"
+					],
+					"path": [
+						"sitemap-manager"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteLocations",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"urls\": [\r\n        {\r\n            \"location\": \"https://apps.dtic.mil/docs/citations/AD0245212\"\r\n        },\r\n        {\r\n            \"location\": \"https://apps.dtic.mil/docs/citations/AD1001121\"\r\n        }\r\n    ]\r\n}"
+				},
+				"url": {
+					"raw": "{{sitemap-manager-host}}/sitemap-manager",
+					"host": [
+						"{{sitemap-manager-host}}"
+					],
+					"path": [
+						"sitemap-manager"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -1,0 +1,15 @@
+{
+	"id": "3c6bd7d7-f1c5-44e4-a22d-073e4def49d6",
+	"name": "localhost",
+	"values": [
+		{
+			"key": "sitemap-manager-host",
+			"value": "http://localhost:8080/",
+			"description": "",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2019-01-08T12:56:20.498Z",
+	"_postman_exported_using": "Postman/6.6.1"
+}
