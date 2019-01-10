@@ -124,4 +124,10 @@ public class IOUtility {
 		}
     }
     
+    public void deleteSitemap(String sitemapKey) {
+    	String sitemapPath = sitemapIndexKeyUtility.getSitemapFilePath(configuration.getRootPath(), sitemapKey);
+    	File sitemapFile = new File(sitemapPath);
+    	sitemapFile.delete();
+    }
+    
 }
