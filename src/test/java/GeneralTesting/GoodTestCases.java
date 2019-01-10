@@ -4,6 +4,7 @@
 package GeneralTesting;
 
 import java.time.Instant;
+import java.util.Properties;
 import mil.dtic.sitemaps.management.SitemapManagerApplication;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -17,6 +18,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -38,17 +40,23 @@ import org.springframework.web.context.WebApplicationContext;
 //@WebMvcTest
 //@WebAppConfiguration
 //@ContextConfiguration("my-servlet-context.xml")
+//@TestPropertySource(locations = "classpath:../../resources/test-application.properties")
+@TestPropertySource(locations = "classpath:test-application.properties")
+//@TestPropertySource
 public class GoodTestCases {
 
 	@Autowired
 	private WebApplicationContext wac;
 	private MockMvc mockMvc;
+	private static final String tmpdirPath = "";
 	
 	public GoodTestCases() {
 	}
 	
 	@BeforeClass
 	public static void setUpClass() {
+		Properties props = System.getProperties();
+		props.setProperty("java.io.tmpdir", tmpdirPath);
 	}
 	
 	@AfterClass
@@ -65,12 +73,7 @@ public class GoodTestCases {
 	}
 
 	@Test
-	public void testPostEmptyList() {
-
-	}
-
-	@Test
-	public void testPostOneValidEntry() throws Exception {
+	public void testPostEmptyList() throws Exception {
 		mockMvc.perform(post("/sitemap-manager").content("{}").contentType(MediaType.APPLICATION_JSON).accept(MediaType.TEXT_PLAIN))
 		//mockMvc.perform(post("/sitemap-manager", "").accept(MediaType.TEXT_PLAIN))
 			.andDo(print())
@@ -84,6 +87,11 @@ public class GoodTestCases {
 			//.andExpect(jsonPath("$.path").value("/sitemap-manager"))
 			.andExpect(content().string("created"))
 			;
+	}
+
+	@Test
+	public void testPostOneValidEntry() throws Exception {
+
 	}
 
 	// TODO add test methods here.
