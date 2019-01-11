@@ -47,10 +47,9 @@ public class GoodTestCases {
 	private MockMvc mockMvc;
 	@Autowired
 	private SitemapManagerConfiguration config;
-	private final String sitemapFile;
+	private String sitemapFile;
 	
 	public GoodTestCases() {
-		sitemapFile = config.getRootPath() + "sitemap.xml";
 	}
 	
 	@BeforeClass
@@ -63,6 +62,7 @@ public class GoodTestCases {
 	
 	@Before
 	public void setUp() throws IOException {
+		sitemapFile = config.getRootPath() + "sitemap.xml";
 		mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
 		Files.createDirectories(Paths.get(config.getRootPath()));
 	}
@@ -120,5 +120,6 @@ public class GoodTestCases {
 
 	@Test
 	public void testPostOneValidEntry() throws Exception {
+		generalTest("emptyList", "goodSitemaps/emptySitemap.xml", sitemapFile);
 	}
 }
