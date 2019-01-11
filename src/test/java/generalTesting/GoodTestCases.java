@@ -1,5 +1,8 @@
 package generalTesting;
 
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.util.StdDateFormat;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -7,6 +10,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import mil.dtic.sitemaps.management.SitemapManagerApplication;
 import mil.dtic.sitemaps.management.configuration.SitemapManagerConfiguration;
+import mil.dtic.sitemaps.management.resources.domain.TUrl;
+import mil.dtic.sitemaps.management.resources.domain.Urlset;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -47,6 +52,7 @@ public class GoodTestCases {
 	private MockMvc mockMvc;
 	@Autowired
 	private SitemapManagerConfiguration config;
+	private String sitemapIndexFile;
 	private String sitemapFile;
 	
 	public GoodTestCases() {
@@ -62,7 +68,8 @@ public class GoodTestCases {
 	
 	@Before
 	public void setUp() throws IOException {
-		sitemapFile = config.getRootPath() + "sitemap.xml";
+		sitemapIndexFile = config.getRootPath() + "sitemap.xml";
+		sitemapFile = config.getRootPath() + "sitemap-AD100x.xml";
 		mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
 		Files.createDirectories(Paths.get(config.getRootPath()));
 	}
@@ -83,6 +90,38 @@ public class GoodTestCases {
 	}
 
 	/**
+	 * I'm unsure if I should use DOM or just use Jackson to compare the XML so
+	 * I'm creating this function to easily change it later if we change our mind.
+	 * @param expectedResourcePath
+	 * @param actualXmlPath 
+	 */
+	private void compareXmlFiles(String expectedResourcePath, String actualXmlPath) throws IOException {
+		/*
+		String correctXmlString = resourceToString(expectedResourcePath);
+		String createdXmlString = fileToString(actualXmlPath);
+		assertEquals(correctXmlString, createdXmlString);
+		*/
+		
+		File expectedXmlFile = new ClassPathResource(expectedResourcePath).getFile();
+		File actualXmlFile = new File(actualXmlPath);
+		if(expectedXmlFile.exists() && !expectedXmlFile.isDirectory() && actualXmlFile.exists() && !actualXmlFile.isDirectory()) {
+			XmlMapper mapper = new XmlMapper();
+			mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+			mapper.setDateFormat(new StdDateFormat());
+			Urlset expectedUrlset = mapper.readValue(expectedXmlFile, Urlset.class);
+			Urlset actualUrlset = mapper.readValue(actualXmlFile, Urlset.class);
+
+			TUrl expectedTUrl = expectedUrlset.getUrl().get(0);
+			TUrl actualTUrl = actualUrlset.getUrl().get(0);
+
+			//assertEquals(expectedTUrl.getLastmod().getTime(), actualTUrl.getLastmod().getTime(), 1);// 60000
+			assertEquals(expectedTUrl.getLoc(), actualTUrl.getLoc());
+		} else {
+			fail("Didn't find XML files correctly.");
+		}
+	}
+
+	/**
 	 * 
 	 * @param requestJsonPath Should be the resource path rather than full paths
 	 * @param expectedSitemapPath resource path
@@ -97,12 +136,9 @@ public class GoodTestCases {
 		mockMvc.perform(postRequest)
 			.andExpect(status().isCreated())
 			.andExpect(content().contentType("text/plain;charset=UTF-8"))
-			.andExpect(content().string("created"))
-			;
+			.andExpect(content().string("created"));
 
-		String correctXmlString = resourceToString(expectedSitemapPath);
-		String createdXmlString = fileToString(actualSitemapPath);
-		assertEquals(correctXmlString, createdXmlString);
+		compareXmlFiles(expectedSitemapPath, actualSitemapPath);
 	}
 
 	@Test
@@ -112,5 +148,22 @@ public class GoodTestCases {
 
 	@Test
 	public void testPostOneValidEntry() throws Exception {
+		/*
+		String locationJson = resourceToString("requestJson/justLocation.json");
+
+		MockHttpServletRequestBuilder postRequest = post("/sitemap-manager")
+			.content(locationJson)
+			.contentType(MediaType.APPLICATION_JSON)
+			.accept(MediaType.TEXT_PLAIN);
+
+		mockMvc.perform(postRequest)
+			.andExpect(status().isCreated())
+			.andExpect(content().contentType("text/plain;charset=UTF-8"))
+			.andExpect(content().string("created"));
+
+		String createdXmlString = fileToString(sitemapFile);
+		System.out.println(createdXmlString);
+*/
+		generalTest("requestJson/justLocation.json", "goodSitemaps/justLocationSitemap.xml", sitemapFile);
 	}
 }
