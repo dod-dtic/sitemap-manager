@@ -106,15 +106,15 @@ public class GoodTestCases {
 		}
 
 		if (expectedTUrl.getChangefreq() != null) {
-			assertEquals(expectedTUrl.getLastmod(), actualTUrl.getLastmod());
+			assertEquals(expectedTUrl.getChangefreq(), actualTUrl.getChangefreq());
 		} else {
-			assertEquals(expectedTUrl.getChangefreq(), config.getDefaultChangeFrequency());
+			assertEquals(config.getDefaultChangeFrequency(), actualTUrl.getChangefreq());
 		}
 
 		if (expectedTUrl.getPriority() != null) {
-			assertEquals(expectedTUrl.getLastmod(), actualTUrl.getLastmod());
+			assertEquals(expectedTUrl.getPriority(), actualTUrl.getPriority());
 		} else {
-			assertEquals(expectedTUrl.getPriority(), config.getDefaultPriority());
+			assertEquals(config.getDefaultPriority(), actualTUrl.getPriority());
 		}
 	}
 
@@ -157,11 +157,11 @@ public class GoodTestCases {
 
 	@Test
 	public void testPostEmptyList() throws Exception {
-		generalTest("requestJson/emptyList.json", "goodSitemaps/emptySitemap.xml", sitemapFile);
+		generalTest("requestJson/emptyList.json", "goodSitemaps/emptySitemap.xml", defaultSitemapName);
 	}
 
 	@Test
 	public void testPostOneValidEntry() throws Exception {
-		generalTest("requestJson/justLocation.json", "goodSitemaps/justLocationSitemap.xml", sitemapFile);
+		generalTest("requestJson/justLocation.json", "goodSitemaps/justLocationSitemap.xml", defaultSitemapName);
 	}
 }
