@@ -107,19 +107,10 @@ public class GoodTestCases {
 
 	@Test
 	public void testPostEmptyList() throws Exception {
-		mockMvc.perform(post("/sitemap-manager").content("{}").contentType(MediaType.APPLICATION_JSON).accept(MediaType.TEXT_PLAIN))
-			.andExpect(status().isCreated())
-			.andExpect(content().contentType("text/plain;charset=UTF-8"))
-			.andExpect(content().string("created"))
-			;
-
-		String correctXmlString = resourceToString("goodSitemaps/emptySitemap.xml");
-		String createdXmlString = fileToString(sitemapFile);
-		assertEquals(correctXmlString, createdXmlString);
+		generalTest("requestJson/emptyList.json", "goodSitemaps/emptySitemap.xml", sitemapFile);
 	}
 
 	@Test
 	public void testPostOneValidEntry() throws Exception {
-		generalTest("emptyList", "goodSitemaps/emptySitemap.xml", sitemapFile);
 	}
 }
