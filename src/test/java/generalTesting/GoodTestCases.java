@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Date;
 import java.util.List;
 import mil.dtic.sitemaps.management.SitemapManagerApplication;
 import mil.dtic.sitemaps.management.configuration.SitemapManagerConfiguration;
@@ -91,8 +92,6 @@ public class GoodTestCases {
 	}
 
 	/**
-	 * I'm unsure if I should use DOM or just use Jackson to compare the XML so
-	 * I'm creating this function to easily change it later if we change our mind.
 	 * @param expectedResourcePath
 	 * @param actualXmlPath 
 	 */
@@ -102,7 +101,11 @@ public class GoodTestCases {
 		if (expectedTUrl.getLastmod() != null) {
 			assertEquals(expectedTUrl.getLastmod(), actualTUrl.getLastmod());
 		} else {
-			// Need to figure this out. Get current time and check within some delta. w:w
+			long allowableDelta = 30000;
+			long now = new Date().getTime();
+			long createdTime = actualTUrl.getLastmod().getTime();
+			// Checking that createdTime isn't after now shouldn't be necessary but can be done if wanted.
+			assertTrue((now - allowableDelta) < createdTime);
 		}
 
 		if (expectedTUrl.getChangefreq() != null) {
@@ -118,6 +121,13 @@ public class GoodTestCases {
 		}
 	}
 
+	/**
+	 * I'm unsure if I should use DOM or just use Jackson to compare the XML so
+	 * I'm creating this function to easily change it later if we change our mind.
+	 * @param xmlFile
+	 * @return
+	 * @throws IOException 
+	 */
 	private List<TUrl> parseXmlFile(File xmlFile) throws IOException {
 		Urlset urlset = null;
 		if(xmlFile.exists() && !xmlFile.isDirectory()) {
@@ -133,7 +143,7 @@ public class GoodTestCases {
 	}
 
 	/**
-	 * TODO need to figure out how to test file names.
+	 * TODO need to figure out how to test file names. Need to figure out what determines default file names.
 	 * TODO need to test the sitemap index
 	 * @param requestJsonPath Should be the resource path rather than full paths
 	 * @param expectedSitemapPath resource path
