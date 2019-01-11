@@ -56,10 +56,10 @@ public class GoodTestCases {
 	private MockMvc mockMvc;
 	@Autowired
 	private SitemapManagerConfiguration config;
-	@Rule
-	public TemporaryFolder testFolder = new TemporaryFolder();
+	private final String sitemapFile;
 	
 	public GoodTestCases() {
+		sitemapFile = config.getRootPath() + "sitemap.xml";
 	}
 	
 	@BeforeClass
@@ -102,11 +102,10 @@ public class GoodTestCases {
 			;
 
 		File correctFile = new ClassPathResource("goodSitemaps/emptySitemap.xml").getFile();
-		System.out.println(System.getProperty("java.io.tmpdir"));
 		String correctXmlString = new String(Files.readAllBytes(correctFile.toPath()));
-		byte[] encoded = Files.readAllBytes(Paths.get(config.getRootPath()));
-		//String createdXmlString = new String(encoded, Charset.forName("utf-8"));
-		//assertEquals(correctXmlString, createdXmlString);
+		byte[] encoded = Files.readAllBytes(Paths.get(sitemapFile));
+		String createdXmlString = new String(encoded, Charset.forName("utf-8"));
+		assertEquals(correctXmlString, createdXmlString);
 	}
 
 	@Test
