@@ -222,7 +222,7 @@ public class GoodTestCases {
 		ordActual.sort(comp);
 		assertEquals(ordExpected.size(), ordActual.size());
 		
-		for (int i=1; i<ordExpected.size(); i++) {
+		for (int i=0; i<ordExpected.size(); i++) {
 			compareTUrls(ordExpected.get(i), ordActual.get(i));
 		}
 	}
@@ -241,7 +241,7 @@ public class GoodTestCases {
 		ordActual.sort(comp);
 		assertEquals(ordExpected.size(), ordActual.size());
 		
-		for (int i=1; i<ordExpected.size(); i++) {
+		for (int i=0; i<ordExpected.size(); i++) {
 			long now = new Date().getTime();
 			long createdTime = ordActual.get(i).getLastmod().getTime();
 			// Checking that createdTime isn't after now shouldn't be necessary but can be done if wanted.
@@ -267,7 +267,7 @@ public class GoodTestCases {
 		ordActual.sort(comp);
 		assertEquals(ordExpected.size(), ordActual.size());
 		
-		for (int i=1; i<ordExpected.size(); i++) {
+		for (int i=0; i<ordExpected.size(); i++) {
 			compareSitemaps(ordExpected.get(i), ordActual.get(i));
 		}
 	}
