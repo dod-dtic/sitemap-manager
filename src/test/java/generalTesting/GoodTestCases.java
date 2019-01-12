@@ -223,8 +223,31 @@ public class GoodTestCases {
 		}
 	}
 
-	private void compareSitemapCollections(SitemapCollection expected, SitemapCollection actual) {
+	private void compareSitemapIndices(Sitemapindex expected, Sitemapindex actual) {
 
+	}
+
+	/**
+	 * Need to improve loops like in compareSitemaps
+	 * Optimization and making sure it is bijective.
+	 * @param expected
+	 * @param actual 
+	 */
+	private void compareSitemapCollections(SitemapCollection expected, SitemapCollection actual) throws IOException {
+		compareSitemapIndices(expected.sitemapindex, actual.sitemapindex);
+		for (Sitemap expectedSitemap : expected.sitemaps) {
+			boolean found = false;
+			for (Sitemap actualSitemap : actual.sitemaps) {
+				if (expectedSitemap.name == actualSitemap.name) {
+					compareSitemaps(expectedSitemap, actualSitemap);
+					found = true;
+				}
+			}
+
+			if (!found) {
+				fail("Didn't find sitemap file " + expectedSitemap.name + "from expected in actual");
+			}
+		}
 	}
 
 	/**
@@ -250,11 +273,11 @@ public class GoodTestCases {
 
 	@Test
 	public void testPostEmptyList() throws Exception {
-		generalTest("requestJson/emptyList.json", testResourceDirName + "/empty", defaultSitemapName);
+		generalTest("requestJson/emptyList.json", testResourceDirName + "/empty");
 	}
 
 	@Test
 	public void testPostOneValidEntry() throws Exception {
-		generalTest("requestJson/justLocation.json", testResourceDirName + "/justLocation", defaultSitemapName);
+		generalTest("requestJson/justLocation.json", testResourceDirName + "/justLocation");
 	}
 }
