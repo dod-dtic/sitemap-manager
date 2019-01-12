@@ -152,6 +152,7 @@ public class GoodTestCases {
 
 	private class Sitemap {
 		public String name;
+		// Could use Urlset, although do we need to?
 		public List<TUrl> urls;
 
 		/*
@@ -195,6 +196,38 @@ public class GoodTestCases {
 	}
 
 	/**
+	 * The comparison could be done so much better. Just want to get it done though.
+	 * Improve later.
+	 * @param expected
+	 * @param actual 
+	 */
+	private void compareSitemaps(Sitemap expected, Sitemap actual) throws IOException {
+		assertEquals(expected.name, actual.name);
+
+		for (TUrl expectedUrl : expected.urls) {
+			TUrl matchingActual = null;
+			// TODO optimize by sorting or at least removing compared items from lists
+			// Could also do a find in lists.
+			// This doesn't check for uniqueness or completeness so
+			// need to remove from list or something and check both lists are exhausted.
+			for (TUrl actualUrl : actual.urls) {
+				if (expectedUrl.getLoc() == actualUrl.getLoc()) {
+					matchingActual = actualUrl;
+					compareTUrls(expectedUrl, actualUrl);
+				}
+			}
+
+			if (matchingActual == null) {
+				fail("No URL in sitemap " + expected.name + " found in actual sitemap " + actual.name);
+			}
+		}
+	}
+
+	private void compareSitemapCollections(SitemapCollection expected, SitemapCollection actual) {
+
+	}
+
+	/**
 	 * TODO need to figure out how to test file names. Need to figure out what determines default file names.
 	 * TODO need to test the sitemap index
 	 * @param requestJsonPath Should be the resource path rather than full paths
@@ -212,10 +245,7 @@ public class GoodTestCases {
 			.andExpect(content().contentType("text/plain;charset=UTF-8"))
 			.andExpect(content().string("created"));
 
-
-		List<TUrl> expectedTUrls = parseXmlFile(new ClassPathResource(expectedSitemapPath).getFile());
-		List<TUrl> actualTUrls = parseXmlFile(new File(actualSitemapPath));
-		compareTUrls(expectedTUrls.get(0), actualTUrls.get(0));
+		compareSitemapCollections(getAllSitemaps(new ClassPathResource(expectedDirectoryPath).getFile()), getAllSitemaps(new File(config.getRootPath())));
 	}
 
 	@Test
