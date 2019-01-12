@@ -313,7 +313,22 @@ public class GoodTestCases {
 	}
 
 	@Test
-	public void testPostOneWithLastModified() throws Exception {
+	public void testPostOneWithName() throws Exception {
+		generalTest("requestJson/withName.json", testResourceDirName + "/withName");
+	}
 
+	@Test
+	public void testPostOneWithPriority() throws Exception {
+		generalTest("requestJson/withPriority.json", testResourceDirName + "/withPriority");
+	}
+
+	@Test
+	public void testPostOneWithAll() throws Exception {
+		generalTest("requestJson/withAll.json", testResourceDirName + "/withAll");
+	}
+
+	@Test
+	public void testPostOneWithAllDifferentOrder() throws Exception {
+		generalTest("requestJson/withAllDifferentOrder.json", testResourceDirName + "/withAll");
 	}
 }
