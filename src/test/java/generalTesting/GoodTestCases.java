@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import mil.dtic.sitemaps.management.SitemapManagerApplication;
 import mil.dtic.sitemaps.management.configuration.SitemapManagerConfiguration;
+import mil.dtic.sitemaps.management.resources.domain.Sitemapindex;
 import mil.dtic.sitemaps.management.resources.domain.TUrl;
 import mil.dtic.sitemaps.management.resources.domain.Urlset;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
@@ -56,6 +57,7 @@ public class GoodTestCases {
 	private SitemapManagerConfiguration config;
 	private String sitemapIndexFile;
 	private String defaultSitemapName;
+	private static final String testResourceDirName = "goodSiteMaps";
 	
 	public GoodTestCases() {
 	}
@@ -108,6 +110,7 @@ public class GoodTestCases {
 			assertTrue((now - allowableDelta) < createdTime);
 		}
 
+		// Since the defaults depend on teh test-application.properties, can't put static values in expected XMLs.
 		if (expectedTUrl.getChangefreq() != null) {
 			assertEquals(expectedTUrl.getChangefreq(), actualTUrl.getChangefreq());
 		} else {
@@ -142,6 +145,55 @@ public class GoodTestCases {
 		return urlset.getUrl();
 	}
 
+	private class SitemapCollection {
+		public Sitemapindex sitemapindex;
+		public List<Sitemap> sitemaps;
+	}
+
+	private class Sitemap {
+		public String name;
+		public List<TUrl> urls;
+
+		/*
+		public TUrlWithName(String name, TUrl sitemap) {
+			this.name = name;
+			this.sitemap = sitemap;
+		}
+		*/
+	}
+
+	private Sitemapindex parseSitemapIndex(File file) {
+		// Stub
+	}
+
+	/**
+	 * Possibly should use ObjectFactory?
+	 * @param sitemapDirFile
+	 * @return
+	 * @throws IOException 
+	 */
+	private SitemapCollection getAllSitemaps(File sitemapDirFile) throws IOException {
+		SitemapCollection sitemaps = new SitemapCollection();
+		//File sitemapDirFile = new File(sitemapDir);
+		File[] sitemapFiles = sitemapDirFile.listFiles();
+		for (File sitemapFile : sitemapFiles) {
+			if (sitemapFile.isFile()) {
+				if (sitemapFile.getName() != "sitemap.xml") {
+					Sitemap sitemap = new Sitemap();
+					sitemap.name = sitemapFile.getName();
+					sitemap.urls = parseXmlFile(sitemapFile);
+					sitemaps.sitemaps.add(sitemap);
+				} else {
+					sitemaps.sitemapindex = parseSitemapIndex(sitemapFile);
+				}
+			} else {
+				// Possibly throw exception instead.
+				fail("Problem getting sitemap file.");
+			}
+		}
+		return sitemaps;
+	}
+
 	/**
 	 * TODO need to figure out how to test file names. Need to figure out what determines default file names.
 	 * TODO need to test the sitemap index
@@ -149,7 +201,7 @@ public class GoodTestCases {
 	 * @param expectedSitemapPath resource path
 	 * @param actualSitemapPath Full path
 	 */
-	private void generalTest(String requestJsonPath, String expectedSitemapPath, String actualSitemapPath) throws Exception {
+	private void generalTest(String requestJsonPath, String expectedDirectoryPath) throws Exception {
 		MockHttpServletRequestBuilder postRequest = post("/sitemap-manager")
 			.content(resourceToString(requestJsonPath))
 			.contentType(MediaType.APPLICATION_JSON)
@@ -160,6 +212,7 @@ public class GoodTestCases {
 			.andExpect(content().contentType("text/plain;charset=UTF-8"))
 			.andExpect(content().string("created"));
 
+
 		List<TUrl> expectedTUrls = parseXmlFile(new ClassPathResource(expectedSitemapPath).getFile());
 		List<TUrl> actualTUrls = parseXmlFile(new File(actualSitemapPath));
 		compareTUrls(expectedTUrls.get(0), actualTUrls.get(0));
@@ -167,11 +220,11 @@ public class GoodTestCases {
 
 	@Test
 	public void testPostEmptyList() throws Exception {
-		generalTest("requestJson/emptyList.json", "goodSitemaps/emptySitemap.xml", defaultSitemapName);
+		generalTest("requestJson/emptyList.json", testResourceDirName + "/empty", defaultSitemapName);
 	}
 
 	@Test
 	public void testPostOneValidEntry() throws Exception {
-		generalTest("requestJson/justLocation.json", "goodSitemaps/justLocationSitemap.xml", defaultSitemapName);
+		generalTest("requestJson/justLocation.json", testResourceDirName + "/justLocation", defaultSitemapName);
 	}
 }
