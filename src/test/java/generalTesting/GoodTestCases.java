@@ -9,8 +9,11 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Function;
 import mil.dtic.sitemaps.management.SitemapManagerApplication;
 import mil.dtic.sitemaps.management.configuration.SitemapManagerConfiguration;
 import mil.dtic.sitemaps.management.resources.domain.Sitemapindex;
@@ -160,13 +163,6 @@ public class GoodTestCases {
 		public String name;
 		// Could use Urlset, although do we need to?
 		public List<TUrl> urls;
-
-		/*
-		public TUrlWithName(String name, TUrl sitemap) {
-			this.name = name;
-			this.sitemap = sitemap;
-		}
-		*/
 	}
 
 	private Sitemapindex parseSitemapIndex(File file) throws IOException {
@@ -219,76 +215,60 @@ public class GoodTestCases {
 	private void compareSitemaps(Sitemap expected, Sitemap actual) throws IOException {
 		assertEquals(expected.name, actual.name);
 
-		for (TUrl expectedUrl : expected.urls) {
-			TUrl matchingActual = null;
-			// TODO optimize by sorting or at least removing compared items from lists
-			// Could also do a find in lists.
-			// This doesn't check for uniqueness or completeness so
-			// need to remove from list or something and check both lists are exhausted.
-			for (TUrl actualUrl : actual.urls) {
-				if (expectedUrl.getLoc().equals(actualUrl.getLoc())) {
-					matchingActual = actualUrl;
-					compareTUrls(expectedUrl, actualUrl);
-				}
-			}
-
-			if (matchingActual == null) {
-				fail("No URL in sitemap " + expected.name + " found in actual sitemap " + actual.name);
-			}
-		}
-	}
-
-	private void compareSitemapIndices(Sitemapindex expected, Sitemapindex actual) {
-		List<TSitemap> expectedSitemaps = expected.getSitemap();
-		List<TSitemap> actualSitemaps = actual.getSitemap();
+		Comparator<TUrl> comp = (expectedTUrl, actualTUrl) -> expectedTUrl.getLoc().compareTo(actualTUrl.getLoc());
+		List<TUrl> ordExpected = new ArrayList<>(expected.urls);
+		ordExpected.sort(comp);
+		List<TUrl> ordActual = new ArrayList<>(actual.urls);
+		ordActual.sort(comp);
+		assertEquals(ordExpected.size(), ordActual.size());
 		
-		for (TSitemap actualSitemap : actualSitemaps) {
-			long now = new Date().getTime();
-			long createdTime = actualSitemap.getLastmod().getTime();
-			// Checking that createdTime isn't after now shouldn't be necessary but can be done if wanted.
-			assertTrue((now - allowableDelta) < createdTime);
-
-			boolean found = false;
-			for (TSitemap expectedSitemap : expectedSitemaps) {
-				if (expectedSitemap.getLoc().equals(actualSitemap.getLoc())) {
-					found = true;
-				}
-			}
-			if (!found) {
-				fail("Didn't find sitemap from actual sitemap index with location " + actualSitemap.getLoc() + " in expected sitemaps which means it shouldn't be there.");
-			}
+		for (int i=1; i<ordExpected.size(); i++) {
+			compareTUrls(ordExpected.get(i), ordActual.get(i));
 		}
 	}
 
 	/**
-	 * Need to improve loops like in compareSitemaps
-	 * Optimization and making sure it is bijective.
+	 * If I could figure out how to pass the stuff in the for loop in as a
+	 * lambda to some function I could simplify several functions a lot.
+	 * @param expected
+	 * @param actual 
+	 */
+	private void compareSitemapIndices(Sitemapindex expected, Sitemapindex actual) {
+		Comparator<TSitemap> comp = (expectedTSitemap, actualTSitemap) -> expectedTSitemap.getLoc().compareTo(actualTSitemap.getLoc());
+		List<TSitemap> ordExpected = new ArrayList<>(expected.getSitemap());
+		ordExpected.sort(comp);
+		List<TSitemap> ordActual = new ArrayList<>(actual.getSitemap());
+		ordActual.sort(comp);
+		assertEquals(ordExpected.size(), ordActual.size());
+		
+		for (int i=1; i<ordExpected.size(); i++) {
+			long now = new Date().getTime();
+			long createdTime = ordActual.get(i).getLastmod().getTime();
+			// Checking that createdTime isn't after now shouldn't be necessary but can be done if wanted.
+			assertTrue((now - allowableDelta) < createdTime);
+			assertEquals(ordExpected.get(i).getLoc(), ordActual.get(i).getLoc());
+		}
+	}
+
+	/**
+	 * Could check that sitemap index locations match file names, but we have
+	 * an expected sitemap index which should assure this anyways (if the actual
+	 * sitemap index and sitemaps are correct. It would fail anyways if they weren't)
 	 * @param expected
 	 * @param actual 
 	 */
 	private void compareSitemapCollections(SitemapCollection expected, SitemapCollection actual) throws IOException {
 		compareSitemapIndices(expected.sitemapindex, actual.sitemapindex);
 
-		List<String> indexNames = new ArrayList<>();
-
-		for (TSitemap indexSitemap : actual.sitemapindex.getSitemap()) {
-			String indexLoc = indexSitemap.getLoc();
-			indexNames.add(indexLoc.replace(config.getRootPathWeb(), ""));
-		}
-
-		for (Sitemap expectedSitemap : expected.sitemaps) {
-			boolean found = false;
-			for (Sitemap actualSitemap : actual.sitemaps) {
-				if (expectedSitemap.name.equals(actualSitemap.name)) {
-					found = true;
-					assertTrue(indexNames.contains(actualSitemap.name));
-					compareSitemaps(expectedSitemap, actualSitemap);
-				}
-			}
-
-			if (!found) {
-				fail("Didn't find sitemap file " + expectedSitemap.name + "from expected in actual");
-			}
+		Comparator<Sitemap> comp = (expectedSitemap, actualSitemap) -> expectedSitemap.name.compareTo(actualSitemap.name);
+		List<Sitemap> ordExpected = new ArrayList<>(expected.sitemaps);
+		ordExpected.sort(comp);
+		List<Sitemap> ordActual = new ArrayList<>(actual.sitemaps);
+		ordActual.sort(comp);
+		assertEquals(ordExpected.size(), ordActual.size());
+		
+		for (int i=1; i<ordExpected.size(); i++) {
+			compareSitemaps(ordExpected.get(i), ordActual.get(i));
 		}
 	}
 
