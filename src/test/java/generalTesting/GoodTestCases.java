@@ -8,11 +8,13 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import mil.dtic.sitemaps.management.SitemapManagerApplication;
 import mil.dtic.sitemaps.management.configuration.SitemapManagerConfiguration;
 import mil.dtic.sitemaps.management.resources.domain.Sitemapindex;
+import mil.dtic.sitemaps.management.resources.domain.TSitemap;
 import mil.dtic.sitemaps.management.resources.domain.TUrl;
 import mil.dtic.sitemaps.management.resources.domain.Urlset;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
@@ -58,6 +60,7 @@ public class GoodTestCases {
 	private String sitemapIndexFilename;
 	private String defaultSitemapName;
 	private static final String testResourceDirName = "goodSiteMaps";
+	private static final long allowableDelta = 30000;
 	
 	public GoodTestCases() {
 	}
@@ -103,7 +106,6 @@ public class GoodTestCases {
 		if (expectedTUrl.getLastmod() != null) {
 			assertEquals(expectedTUrl.getLastmod(), actualTUrl.getLastmod());
 		} else {
-			long allowableDelta = 30000;
 			long now = new Date().getTime();
 			long createdTime = actualTUrl.getLastmod().getTime();
 			// Checking that createdTime isn't after now shouldn't be necessary but can be done if wanted.
@@ -234,7 +236,25 @@ public class GoodTestCases {
 	}
 
 	private void compareSitemapIndices(Sitemapindex expected, Sitemapindex actual) {
+		List<TSitemap> expectedSitemaps = expected.getSitemap();
+		List<TSitemap> actualSitemaps = expected.getSitemap();
+		
+		for (TSitemap actualSitemap : actualSitemaps) {
+			long now = new Date().getTime();
+			long createdTime = actualSitemap.getLastmod().getTime();
+			// Checking that createdTime isn't after now shouldn't be necessary but can be done if wanted.
+			assertTrue((now - allowableDelta) < createdTime);
 
+			boolean found = false;
+			for (TSitemap expectedSitemap : expectedSitemaps) {
+				if (expectedSitemap.getLoc() == actualSitemap.getLoc()) {
+					found = true;
+				}
+			}
+			if (!found) {
+				fail("Didn't find sitemap from actual sitemap index with location " + actualSitemap.getLoc() + " in expected sitemaps which means it shouldn't be there.");
+			}
+		}
 	}
 
 	/**
@@ -245,12 +265,21 @@ public class GoodTestCases {
 	 */
 	private void compareSitemapCollections(SitemapCollection expected, SitemapCollection actual) throws IOException {
 		compareSitemapIndices(expected.sitemapindex, actual.sitemapindex);
+
+		List<String> indexNames = new ArrayList<>();
+
+		for (TSitemap indexSitemap : actual.sitemapindex.getSitemap()) {
+			String indexLoc = indexSitemap.getLoc();
+			indexNames.add(indexLoc.replace(config.getRootPathWeb(), ""));
+		}
+
 		for (Sitemap expectedSitemap : expected.sitemaps) {
 			boolean found = false;
 			for (Sitemap actualSitemap : actual.sitemaps) {
 				if (expectedSitemap.name == actualSitemap.name) {
-					compareSitemaps(expectedSitemap, actualSitemap);
 					found = true;
+					assertTrue(indexNames.contains(actualSitemap.name));
+					compareSitemaps(expectedSitemap, actualSitemap);
 				}
 			}
 
