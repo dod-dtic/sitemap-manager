@@ -150,6 +150,10 @@ public class GoodTestCases {
 	private class SitemapCollection {
 		public Sitemapindex sitemapindex;
 		public List<Sitemap> sitemaps;
+
+		public SitemapCollection () {
+			sitemaps = new ArrayList<>();
+		}
 	}
 
 	private class Sitemap {
@@ -167,12 +171,11 @@ public class GoodTestCases {
 
 	private Sitemapindex parseSitemapIndex(File file) throws IOException {
 		Sitemapindex foundSitemapIndex = null;
-		File sitemapIndexFile = new File(config.getRootPath() + sitemapIndexFilename);
-		if (sitemapIndexFile.isFile()) {
+		if (file.isFile()) {
 			XmlMapper mapper = new XmlMapper();
 			mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 			mapper.setDateFormat(new StdDateFormat());
-			foundSitemapIndex = mapper.readValue(sitemapIndexFile, Sitemapindex.class);
+			foundSitemapIndex = mapper.readValue(file, Sitemapindex.class);
 		} else {
 			fail("Can't find sitemap index file.");
 		}
@@ -191,7 +194,7 @@ public class GoodTestCases {
 		File[] sitemapFiles = sitemapDirFile.listFiles();
 		for (File sitemapFile : sitemapFiles) {
 			if (sitemapFile.isFile()) {
-				if (sitemapFile.getName() != "sitemap.xml") {
+				if (!sitemapFile.getName().equals("sitemap.xml")) {
 					Sitemap sitemap = new Sitemap();
 					sitemap.name = sitemapFile.getName();
 					sitemap.urls = parseXmlFile(sitemapFile);
@@ -223,7 +226,7 @@ public class GoodTestCases {
 			// This doesn't check for uniqueness or completeness so
 			// need to remove from list or something and check both lists are exhausted.
 			for (TUrl actualUrl : actual.urls) {
-				if (expectedUrl.getLoc() == actualUrl.getLoc()) {
+				if (expectedUrl.getLoc().equals(actualUrl.getLoc())) {
 					matchingActual = actualUrl;
 					compareTUrls(expectedUrl, actualUrl);
 				}
@@ -237,7 +240,7 @@ public class GoodTestCases {
 
 	private void compareSitemapIndices(Sitemapindex expected, Sitemapindex actual) {
 		List<TSitemap> expectedSitemaps = expected.getSitemap();
-		List<TSitemap> actualSitemaps = expected.getSitemap();
+		List<TSitemap> actualSitemaps = actual.getSitemap();
 		
 		for (TSitemap actualSitemap : actualSitemaps) {
 			long now = new Date().getTime();
@@ -247,7 +250,7 @@ public class GoodTestCases {
 
 			boolean found = false;
 			for (TSitemap expectedSitemap : expectedSitemaps) {
-				if (expectedSitemap.getLoc() == actualSitemap.getLoc()) {
+				if (expectedSitemap.getLoc().equals(actualSitemap.getLoc())) {
 					found = true;
 				}
 			}
@@ -276,7 +279,7 @@ public class GoodTestCases {
 		for (Sitemap expectedSitemap : expected.sitemaps) {
 			boolean found = false;
 			for (Sitemap actualSitemap : actual.sitemaps) {
-				if (expectedSitemap.name == actualSitemap.name) {
+				if (expectedSitemap.name.equals(actualSitemap.name)) {
 					found = true;
 					assertTrue(indexNames.contains(actualSitemap.name));
 					compareSitemaps(expectedSitemap, actualSitemap);
