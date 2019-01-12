@@ -55,7 +55,7 @@ public class GoodTestCases {
 	private MockMvc mockMvc;
 	@Autowired
 	private SitemapManagerConfiguration config;
-	private String sitemapIndexFile;
+	private String sitemapIndexFilename;
 	private String defaultSitemapName;
 	private static final String testResourceDirName = "goodSiteMaps";
 	
@@ -72,7 +72,7 @@ public class GoodTestCases {
 	
 	@Before
 	public void setUp() throws IOException {
-		sitemapIndexFile = config.getRootPath() + "sitemap.xml";
+		sitemapIndexFilename = config.getRootPath() + "sitemap.xml";
 		defaultSitemapName = config.getRootPath() + "sitemap-AD100x.xml";
 		mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
 		Files.createDirectories(Paths.get(config.getRootPath()));
@@ -163,8 +163,18 @@ public class GoodTestCases {
 		*/
 	}
 
-	private Sitemapindex parseSitemapIndex(File file) {
-		// Stub
+	private Sitemapindex parseSitemapIndex(File file) throws IOException {
+		Sitemapindex foundSitemapIndex = null;
+		File sitemapIndexFile = new File(config.getRootPath() + sitemapIndexFilename);
+		if (sitemapIndexFile.isFile()) {
+			XmlMapper mapper = new XmlMapper();
+			mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+			mapper.setDateFormat(new StdDateFormat());
+			foundSitemapIndex = mapper.readValue(sitemapIndexFile, Sitemapindex.class);
+		} else {
+			fail("Can't find sitemap index file.");
+		}
+		return foundSitemapIndex;
 	}
 
 	/**
