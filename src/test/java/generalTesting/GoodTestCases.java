@@ -45,6 +45,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+/**
+ * For the sitemap and sitemap index parsing I maybe should have just modified IOUtility
+ * to allow for arbitrary directories.
+ */
 @SpringBootTest(classes = SitemapManagerApplication.class)
 //@RunWith(SpringJUnit4ClassRunner.class)
 @RunWith(SpringRunner.class)
@@ -299,7 +303,17 @@ public class GoodTestCases {
 	}
 
 	@Test
-	public void testPostOneValidEntry() throws Exception {
+	public void testPostOneJustLocation() throws Exception {
 		generalTest("requestJson/justLocation.json", testResourceDirName + "/justLocation");
+	}
+
+	@Test
+	public void testPostOneWithChangFrequency() throws Exception {
+		generalTest("requestJson/withChangeFrequency.json", testResourceDirName + "/withChangeFrequency");
+	}
+
+	@Test
+	public void testPostOneWithLastModified() throws Exception {
+
 	}
 }
