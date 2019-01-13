@@ -363,6 +363,11 @@ public class GoodTestCases {
 	}
 
 	@Test
+	public void testPostMultipleSomeDefaultsSameName() throws Exception {
+		generalPostTest("requestJson/multipleSomeDefaultsSameName.json", testResourceDirName + "/multipleSomeDefaultsSameName");
+	}
+
+	@Test
 	public void testPostUpdate() throws Exception {
 		generalPostTest("requestJson/multipleSomeDefaults.json", testResourceDirName + "/multipleSomeDefaults");
 		generalPostTest("requestJson/multipleSomeDefaultsUpdate.json", testResourceDirName + "/multipleSomeDefaultsUpdate");
@@ -411,6 +416,11 @@ public class GoodTestCases {
 	@Test
 	public void testPutMultipleSomeDefaults() throws Exception {
 		generalPutTest("requestJson/multipleSomeDefaults.json", testResourceDirName + "/multipleSomeDefaults");
+	}
+
+	@Test
+	public void testPutMultipleSomeDefaultsSameName() throws Exception {
+		generalPutTest("requestJson/multipleSomeDefaultsSameName.json", testResourceDirName + "/multipleSomeDefaultsSameName");
 	}
 
 	@Test
