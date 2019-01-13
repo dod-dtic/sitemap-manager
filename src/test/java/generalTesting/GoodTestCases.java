@@ -362,13 +362,11 @@ public class GoodTestCases {
 		generalPostTest("requestJson/multipleSomeDefaults.json", testResourceDirName + "/multipleSomeDefaults");
 	}
 
-	/*
 	@Test
 	public void testPostUpdate() throws Exception {
 		generalPostTest("requestJson/multipleSomeDefaults.json", testResourceDirName + "/multipleSomeDefaults");
 		generalPostTest("requestJson/multipleSomeDefaultsUpdate.json", testResourceDirName + "/multipleSomeDefaultsUpdate");
 	}
-*/
 
 	@Test
 	public void testPutEmptyList() throws Exception {
