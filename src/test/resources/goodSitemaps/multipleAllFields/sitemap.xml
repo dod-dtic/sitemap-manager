@@ -1,14 +1,14 @@
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 	<sitemap>
-		<loc>http://www.dtic.mil/sitemap-Foo.xml</loc>
+		<loc>http://www.dtic.mil/sitemap-Foox.xml</loc>
 		<lastmod></lastmod>
 	</sitemap>
 	<sitemap>
-		<loc>http://www.dtic.mil/sitemap-Bar.xml</loc>
+		<loc>http://www.dtic.mil/sitemap-Barx.xml</loc>
 		<lastmod></lastmod>
 	</sitemap>
 	<sitemap>
-		<loc>http://www.dtic.mil/sitemap-Baz.xml</loc>
+		<loc>http://www.dtic.mil/sitemap-Bazx.xml</loc>
 		<lastmod></lastmod>
 	</sitemap>
 </sitemapindex>
