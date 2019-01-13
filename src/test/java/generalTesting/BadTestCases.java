@@ -23,10 +23,13 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -40,6 +43,7 @@ public class BadTestCases {
 	private MockMvc mockMvc;
 	@Autowired
 	private SitemapManagerConfiguration config;
+	private static final String badRequestJsonDir = "badRequestJson/";
 	
 	public BadTestCases() {
 	}
@@ -68,31 +72,109 @@ public class BadTestCases {
 		return new String(Files.readAllBytes(correctFile.toPath()));
 	}
 
-	private void storedJsonPostRequest(String requestJsonPath) throws Exception {
-	MockHttpServletRequestBuilder postRequest = request(HttpMethod.POST, "/sitemap-manager")
+	private MockHttpServletRequestBuilder storedJsonRequest(HttpMethod method, String requestJsonPath) throws Exception {
+		System.out.println(requestJsonPath);
+		System.out.println(resourceToString(requestJsonPath));
+		return request(method, "/sitemap-manager")
 			.content(resourceToString(requestJsonPath))
 			.contentType(MediaType.APPLICATION_JSON)
-			.accept(MediaType.TEXT_PLAIN);
-
-		mockMvc.perform(postRequest)
-			.andExpect(status().isCreated())
-			.andExpect(content().contentType("text/plain;charset=UTF-8"))
-			.andExpect(content().string("created"));
+			.accept(MediaType.APPLICATION_JSON);
 	}
 
-	// TODO add test methods here.
-	// The methods must be annotated with annotation @Test. For example:
-	//
+	/**
+	 * TODO check that a sitemap file and index weren't created.
+	 * This should return a 400 response rather than an unhandled exception and 500 response.
+	 * Might be handled better with newer changes.
+	 * @throws Exception 
+	 */
 	@Test
-	public void testMissinglocation() {
+	public void testPostMissinglocation() throws Exception {
+		MockHttpServletRequestBuilder foo = storedJsonRequest(HttpMethod.POST, badRequestJsonDir + "missingLocation.json");
+		mockMvc.perform(foo)
+		//mockMvc.perform(storedJsonRequest(HttpMethod.POST, badRequestJsonDir + "missingLocation.json"))
+			.andExpect(status().isBadRequest())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+			//.andExpect(jsonPath("$.timestamp").value(String.valueOf(Instant.now().getEpochSecond())))
+			.andExpect(jsonPath("$.status").value("400"))
+			.andExpect(jsonPath("$.error").value("Bad Request"))
+			.andExpect(jsonPath("$.exception").value("org.springframework.http.converter.HttpMessageNotReadableException"))
+			.andExpect(jsonPath("$.message").value("Required request body is missing: public org.springframework.http.ResponseEntity<java.lang.String> mil.dtic.sitemaps.management.controller.SitemapManagerController.addLocations(mil.dtic.sitemaps.management.resources.IndexedLocationList)"))
+			.andExpect(jsonPath("$.path").value("/sitemap-manager"));
 	}
 
-	// If we make a test for empty body then this code might be useful.
-		//mockMvc.perform(post("/sitemap-manager", "").accept(MediaType.TEXT_PLAIN))
+	@Test
+	public void testPostBadChangeFrequency() throws Exception {
+		ResultActions foo = mockMvc.perform(storedJsonRequest(HttpMethod.POST, badRequestJsonDir + "badChangeFrequency.json"));
+
+			foo.andExpect(status().isBadRequest())
+			.andDo(print())
+			//.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			//.andExpect(jsonPath("$.timestamp").value(String.valueOf(Instant.now().getEpochSecond())))
-			//.andExpect(jsonPath("$.status").value("400"))
-			//.andExpect(jsonPath("$.error").value("Bad Request"))
-			//.andExpect(jsonPath("$.exception").value("org.springframework.http.converter.HttpMessageNotReadableException"))
-			//.andExpect(jsonPath("$.message").value("Required request body is missing: public org.springframework.http.ResponseEntity<java.lang.String> mil.dtic.sitemaps.management.controller.SitemapManagerController.addLocations(mil.dtic.sitemaps.management.resources.IndexedLocationList)"))
-			//.andExpect(jsonPath("$.path").value("/sitemap-manager"))
+			.andExpect(jsonPath("$.status").value("400"))
+			.andExpect(jsonPath("$.error").value("Bad Request"))
+			.andExpect(jsonPath("$.exception").value("org.springframework.http.converter.HttpMessageNotReadableException"))
+			.andExpect(jsonPath("$.message").value("Required request body is missing: public org.springframework.http.ResponseEntity<java.lang.String> mil.dtic.sitemaps.management.controller.SitemapManagerController.addLocations(mil.dtic.sitemaps.management.resources.IndexedLocationList)"))
+			.andExpect(jsonPath("$.path").value("/sitemap-manager"));
+	}
+
+	/**
+	 * If sitemap manager is supposed to allow duplicate URLs/locations then this
+	 * might actually not be a "bad" request. Change to "good" test if that's the case.
+	 * @throws Exception 
+	 */
+	@Test
+	public void testPostDuplicateLocationsInRequest() throws Exception {
+		mockMvc.perform(storedJsonRequest(HttpMethod.POST, badRequestJsonDir + "duplicateLocationsInRequest.json"))
+			.andDo(print())
+			.andExpect(status().isBadRequest())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+			//.andExpect(jsonPath("$.timestamp").value(String.valueOf(Instant.now().getEpochSecond())))
+			.andExpect(jsonPath("$.status").value("400"))
+			.andExpect(jsonPath("$.error").value("Bad Request"))
+			.andExpect(jsonPath("$.exception").value("org.springframework.http.converter.HttpMessageNotReadableException"))
+			.andExpect(jsonPath("$.message").value("Required request body is missing: public org.springframework.http.ResponseEntity<java.lang.String> mil.dtic.sitemaps.management.controller.SitemapManagerController.addLocations(mil.dtic.sitemaps.management.resources.IndexedLocationList)"))
+			.andExpect(jsonPath("$.path").value("/sitemap-manager"));
+	}
+
+	@Test
+	public void testPostFutureLastModified() throws Exception {
+		mockMvc.perform(storedJsonRequest(HttpMethod.POST, badRequestJsonDir + "futureLastModified.json"))
+			.andDo(print())
+			.andExpect(status().isBadRequest())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+			//.andExpect(jsonPath("$.timestamp").value(String.valueOf(Instant.now().getEpochSecond())))
+			.andExpect(jsonPath("$.status").value("400"))
+			.andExpect(jsonPath("$.error").value("Bad Request"))
+			.andExpect(jsonPath("$.exception").value("org.springframework.http.converter.HttpMessageNotReadableException"))
+			.andExpect(jsonPath("$.message").value("Required request body is missing: public org.springframework.http.ResponseEntity<java.lang.String> mil.dtic.sitemaps.management.controller.SitemapManagerController.addLocations(mil.dtic.sitemaps.management.resources.IndexedLocationList)"))
+			.andExpect(jsonPath("$.path").value("/sitemap-manager"));
+	}
+
+	@Test
+	public void testPostInvalidUrl() throws Exception {
+		mockMvc.perform(storedJsonRequest(HttpMethod.POST, badRequestJsonDir + "invalidUrl.json"))
+			.andDo(print())
+			.andExpect(status().isBadRequest())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+			//.andExpect(jsonPath("$.timestamp").value(String.valueOf(Instant.now().getEpochSecond())))
+			.andExpect(jsonPath("$.status").value("400"))
+			.andExpect(jsonPath("$.error").value("Bad Request"))
+			.andExpect(jsonPath("$.exception").value("org.springframework.http.converter.HttpMessageNotReadableException"))
+			.andExpect(jsonPath("$.message").value("Required request body is missing: public org.springframework.http.ResponseEntity<java.lang.String> mil.dtic.sitemaps.management.controller.SitemapManagerController.addLocations(mil.dtic.sitemaps.management.resources.IndexedLocationList)"))
+			.andExpect(jsonPath("$.path").value("/sitemap-manager"));
+	}
+
+	@Test
+	public void testOutOfRangePriority() throws Exception {
+		mockMvc.perform(storedJsonRequest(HttpMethod.POST, badRequestJsonDir + "outOfRangePriority.json"))
+			.andDo(print())
+			.andExpect(status().isBadRequest())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+			//.andExpect(jsonPath("$.timestamp").value(String.valueOf(Instant.now().getEpochSecond())))
+			.andExpect(jsonPath("$.status").value("400"))
+			.andExpect(jsonPath("$.error").value("Bad Request"))
+			.andExpect(jsonPath("$.exception").value("org.springframework.http.converter.HttpMessageNotReadableException"))
+			.andExpect(jsonPath("$.message").value("Required request body is missing: public org.springframework.http.ResponseEntity<java.lang.String> mil.dtic.sitemaps.management.controller.SitemapManagerController.addLocations(mil.dtic.sitemaps.management.resources.IndexedLocationList)"))
+			.andExpect(jsonPath("$.path").value("/sitemap-manager"));
+	}
 }
