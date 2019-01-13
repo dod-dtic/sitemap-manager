@@ -276,14 +276,7 @@ public class GoodTestCases {
 		}
 	}
 
-	/**
-	 * TODO need to figure out how to test file names. Need to figure out what determines default file names.
-	 * TODO need to test the sitemap index
-	 * @param requestJsonPath Should be the resource path rather than full paths
-	 * @param expectedSitemapPath resource path
-	 * @param actualSitemapPath Full path
-	 */
-	private void generalTest(String requestJsonPath, String expectedDirectoryPath) throws Exception {
+	private void storedJsonRequest(String requestJsonPath) throws Exception {
 		MockHttpServletRequestBuilder postRequest = post("/sitemap-manager")
 			.content(resourceToString(requestJsonPath))
 			.contentType(MediaType.APPLICATION_JSON)
@@ -293,6 +286,15 @@ public class GoodTestCases {
 			.andExpect(status().isCreated())
 			.andExpect(content().contentType("text/plain;charset=UTF-8"))
 			.andExpect(content().string("created"));
+	}
+
+	/**
+	 * @param requestJsonPath Should be the resource path rather than full paths
+	 * @param expectedSitemapPath resource path
+	 * @param actualSitemapPath Full path
+	 */
+	private void generalTest(String requestJsonPath, String expectedDirectoryPath) throws Exception {
+		storedJsonRequest(requestJsonPath);
 
 		compareSitemapCollections(getAllSitemaps(new ClassPathResource(expectedDirectoryPath).getFile()), getAllSitemaps(new File(config.getRootPath())));
 	}
@@ -340,5 +342,11 @@ public class GoodTestCases {
 	@Test
 	public void testPostMultipleSomeDefaults() throws Exception {
 		generalTest("requestJson/multipleSomeDefaults.json", testResourceDirName + "/multipleSomeDefaults");
+	}
+
+	@Test
+	public void testPostUpdate() throws Exception {
+		generalTest("requestJson/multipleSomeDefaults.json", testResourceDirName + "/multipleSomeDefaults");
+		generalTest("requestJson/multipleSomeDefaultsUpdate.json", testResourceDirName + "/multipleSomeDefaultsUpdate");
 	}
 }
