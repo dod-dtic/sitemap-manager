@@ -319,113 +319,113 @@ public class GoodTestCases {
 
 	@Test
 	public void testPostEmptyList() throws Exception {
-		generalPostTest("requestJson/emptyList.json", testResourceDirName + "/empty");
+		generalPostTest("goodRequestJson/emptyList.json", testResourceDirName + "/empty");
 	}
 
 	@Test
 	public void testPostOneJustLocation() throws Exception {
-		generalPostTest("requestJson/justLocation.json", testResourceDirName + "/justLocation");
+		generalPostTest("goodRequestJson/justLocation.json", testResourceDirName + "/justLocation");
 	}
 
 	@Test
 	public void testPostOneWithChangFrequency() throws Exception {
-		generalPostTest("requestJson/withChangeFrequency.json", testResourceDirName + "/withChangeFrequency");
+		generalPostTest("goodRequestJson/withChangeFrequency.json", testResourceDirName + "/withChangeFrequency");
 	}
 
 	@Test
 	public void testPostOneWithName() throws Exception {
-		generalPostTest("requestJson/withName.json", testResourceDirName + "/withName");
+		generalPostTest("goodRequestJson/withName.json", testResourceDirName + "/withName");
 	}
 
 	@Test
 	public void testPostOneWithPriority() throws Exception {
-		generalPostTest("requestJson/withPriority.json", testResourceDirName + "/withPriority");
+		generalPostTest("goodRequestJson/withPriority.json", testResourceDirName + "/withPriority");
 	}
 
 	@Test
 	public void testPostOneWithAll() throws Exception {
-		generalPostTest("requestJson/withAll.json", testResourceDirName + "/withAll");
+		generalPostTest("goodRequestJson/withAll.json", testResourceDirName + "/withAll");
 	}
 
 	@Test
 	public void testPostOneWithAllDifferentOrder() throws Exception {
-		generalPostTest("requestJson/withAllDifferentOrder.json", testResourceDirName + "/withAll");
+		generalPostTest("goodRequestJson/withAllDifferentOrder.json", testResourceDirName + "/withAll");
 	}
 
 	@Test
 	public void testPostMultipleAllFields() throws Exception {
-		generalPostTest("requestJson/multipleAllFields.json", testResourceDirName + "/multipleAllFields");
+		generalPostTest("goodRequestJson/multipleAllFields.json", testResourceDirName + "/multipleAllFields");
 	}
 
 	@Test
 	public void testPostMultipleSomeDefaults() throws Exception {
-		generalPostTest("requestJson/multipleSomeDefaults.json", testResourceDirName + "/multipleSomeDefaults");
+		generalPostTest("goodRequestJson/multipleSomeDefaults.json", testResourceDirName + "/multipleSomeDefaults");
 	}
 
 	@Test
 	public void testPostMultipleSomeDefaultsSameName() throws Exception {
-		generalPostTest("requestJson/multipleSomeDefaultsSameName.json", testResourceDirName + "/multipleSomeDefaultsSameName");
+		generalPostTest("goodRequestJson/multipleSomeDefaultsSameName.json", testResourceDirName + "/multipleSomeDefaultsSameName");
 	}
 
 	@Test
 	public void testPostUpdate() throws Exception {
-		generalPostTest("requestJson/multipleSomeDefaults.json", testResourceDirName + "/multipleSomeDefaults");
-		generalPostTest("requestJson/multipleSomeDefaultsUpdate.json", testResourceDirName + "/multipleSomeDefaultsUpdate");
+		generalPostTest("goodRequestJson/multipleSomeDefaults.json", testResourceDirName + "/multipleSomeDefaults");
+		generalPostTest("goodRequestJson/multipleSomeDefaultsUpdate.json", testResourceDirName + "/multipleSomeDefaultsUpdate");
 	}
 
 	@Test
 	public void testPutEmptyList() throws Exception {
-		generalPutTest("requestJson/emptyList.json", testResourceDirName + "/empty");
+		generalPutTest("goodRequestJson/emptyList.json", testResourceDirName + "/empty");
 	}
 
 	@Test
 	public void testPutOneJustLocation() throws Exception {
-		generalPutTest("requestJson/justLocation.json", testResourceDirName + "/justLocation");
+		generalPutTest("goodRequestJson/justLocation.json", testResourceDirName + "/justLocation");
 	}
 
 	@Test
 	public void testPutOneWithChangFrequency() throws Exception {
-		generalPutTest("requestJson/withChangeFrequency.json", testResourceDirName + "/withChangeFrequency");
+		generalPutTest("goodRequestJson/withChangeFrequency.json", testResourceDirName + "/withChangeFrequency");
 	}
 
 	@Test
 	public void testPutOneWithName() throws Exception {
-		generalPutTest("requestJson/withName.json", testResourceDirName + "/withName");
+		generalPutTest("goodRequestJson/withName.json", testResourceDirName + "/withName");
 	}
 
 	@Test
 	public void testPutOneWithPriority() throws Exception {
-		generalPutTest("requestJson/withPriority.json", testResourceDirName + "/withPriority");
+		generalPutTest("goodRequestJson/withPriority.json", testResourceDirName + "/withPriority");
 	}
 
 	@Test
 	public void testPutOneWithAll() throws Exception {
-		generalPutTest("requestJson/withAll.json", testResourceDirName + "/withAll");
+		generalPutTest("goodRequestJson/withAll.json", testResourceDirName + "/withAll");
 	}
 
 	@Test
 	public void testPutOneWithAllDifferentOrder() throws Exception {
-		generalPutTest("requestJson/withAllDifferentOrder.json", testResourceDirName + "/withAll");
+		generalPutTest("goodRequestJson/withAllDifferentOrder.json", testResourceDirName + "/withAll");
 	}
 
 	@Test
 	public void testPutMultipleAllFields() throws Exception {
-		generalPutTest("requestJson/multipleAllFields.json", testResourceDirName + "/multipleAllFields");
+		generalPutTest("goodRequestJson/multipleAllFields.json", testResourceDirName + "/multipleAllFields");
 	}
 
 	@Test
 	public void testPutMultipleSomeDefaults() throws Exception {
-		generalPutTest("requestJson/multipleSomeDefaults.json", testResourceDirName + "/multipleSomeDefaults");
+		generalPutTest("goodRequestJson/multipleSomeDefaults.json", testResourceDirName + "/multipleSomeDefaults");
 	}
 
 	@Test
 	public void testPutMultipleSomeDefaultsSameName() throws Exception {
-		generalPutTest("requestJson/multipleSomeDefaultsSameName.json", testResourceDirName + "/multipleSomeDefaultsSameName");
+		generalPutTest("goodRequestJson/multipleSomeDefaultsSameName.json", testResourceDirName + "/multipleSomeDefaultsSameName");
 	}
 
 	@Test
 	public void testPutUpdate() throws Exception {
-		generalPutTest("requestJson/multipleSomeDefaults.json", testResourceDirName + "/multipleSomeDefaults");
-		generalPutTest("requestJson/multipleSomeDefaultsUpdate.json", testResourceDirName + "/multipleSomeDefaultsUpdate");
+		generalPutTest("goodRequestJson/multipleSomeDefaults.json", testResourceDirName + "/multipleSomeDefaults");
+		generalPutTest("goodRequestJson/multipleSomeDefaultsUpdate.json", testResourceDirName + "/multipleSomeDefaultsUpdate");
 	}
 }
