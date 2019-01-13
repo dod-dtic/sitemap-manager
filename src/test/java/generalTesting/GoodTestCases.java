@@ -331,4 +331,14 @@ public class GoodTestCases {
 	public void testPostOneWithAllDifferentOrder() throws Exception {
 		generalTest("requestJson/withAllDifferentOrder.json", testResourceDirName + "/withAll");
 	}
+
+	@Test
+	public void testPostMultipleAllFields() throws Exception {
+		generalTest("requestJson/multipleAllFields.json", testResourceDirName + "/multipleAllFields");
+	}
+
+	@Test
+	public void testPostMultipleSomeDefaults() throws Exception {
+		generalTest("requestJson/multipleSomeDefaults.json", testResourceDirName + "/multipleSomeDefaults");
+	}
 }
