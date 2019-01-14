@@ -54,6 +54,8 @@ public class GoodTestCases {
 	private SitemapManagerConfiguration config;
 	private static final String testResourceDirName = "goodSiteMaps";
 	private SitemapAssertions sitemapAssertions; 
+	// Querying it outside of code you have to use "/sitemap-manager/sitemap-manager", however I guess doing it within the code gets rid of one of the "/sitemap-managers".
+	private static final String basicEndpoint = "/sitemap-manager";
 	
 	public GoodTestCases() {
 	}
@@ -79,7 +81,7 @@ public class GoodTestCases {
 	}
 
 	private void storedJsonPostRequest(String requestJsonPath) throws Exception {
-	MockHttpServletRequestBuilder postRequest = request(HttpMethod.POST, "/sitemap-manager")
+	MockHttpServletRequestBuilder postRequest = request(HttpMethod.POST, basicEndpoint)
 			.content(resourceToString(requestJsonPath))
 			.contentType(MediaType.APPLICATION_JSON)
 			.accept(MediaType.TEXT_PLAIN);
@@ -101,7 +103,7 @@ public class GoodTestCases {
 	}
 
 	private void storedJsonPutRequest(String requestJsonPath) throws Exception {
-		MockHttpServletRequestBuilder postRequest = request(HttpMethod.PUT, "/sitemap-manager")
+		MockHttpServletRequestBuilder postRequest = request(HttpMethod.PUT, basicEndpoint)
 			.content(resourceToString(requestJsonPath))
 			.contentType(MediaType.APPLICATION_JSON)
 			.accept(MediaType.TEXT_PLAIN);
