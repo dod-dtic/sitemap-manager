@@ -1,5 +1,6 @@
 package generalTesting;
 
+import static generalTesting.Util.resourceToString;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -65,11 +66,6 @@ public class BadTestCases {
 	@After
 	public void tearDown() throws IOException {
 		FileUtils.deleteDirectory(new File(config.getRootPath()));
-	}
-
-	private String resourceToString(String resourcePath) throws IOException {
-		File correctFile = new ClassPathResource(resourcePath).getFile();
-		return new String(Files.readAllBytes(correctFile.toPath()));
 	}
 
 	private MockHttpServletRequestBuilder storedJsonRequest(HttpMethod method, String requestJsonPath) throws Exception {
