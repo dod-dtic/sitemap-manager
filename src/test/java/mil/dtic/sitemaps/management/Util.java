@@ -1,4 +1,4 @@
-package mil.dtic.sitemaps.management.integrationTests;
+package mil.dtic.sitemaps.management;
 
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
