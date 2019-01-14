@@ -1,4 +1,4 @@
-package generalTesting;
+package mil.dtic.sitemaps.management.integrationTests;
 
 import org.junit.After;
 import org.junit.AfterClass;

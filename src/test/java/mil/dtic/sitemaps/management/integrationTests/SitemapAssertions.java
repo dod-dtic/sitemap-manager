@@ -1,7 +1,7 @@
-package generalTesting;
+package mil.dtic.sitemaps.management.integrationTests;
 
-import generalTesting.Util.Sitemap;
-import generalTesting.Util.SitemapCollection;
+import mil.dtic.sitemaps.management.integrationTests.Util.Sitemap;
+import mil.dtic.sitemaps.management.integrationTests.Util.SitemapCollection;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;

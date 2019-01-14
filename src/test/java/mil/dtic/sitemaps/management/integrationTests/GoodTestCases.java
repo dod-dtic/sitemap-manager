@@ -1,7 +1,7 @@
-package generalTesting;
+package mil.dtic.sitemaps.management.integrationTests;
 
-import static generalTesting.Util.getAllSitemaps;
-import static generalTesting.Util.resourceToString;
+import static mil.dtic.sitemaps.management.integrationTests.Util.getAllSitemaps;
+import static mil.dtic.sitemaps.management.integrationTests.Util.resourceToString;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
