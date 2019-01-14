@@ -23,6 +23,9 @@ import org.springframework.test.context.junit4.SpringRunner;
  *
  */
 public class Util {
+	// Possibly should be passed into an object
+	private static final String indexFilename = "sitemap.xml";
+
 	public static String resourceToString(String resourcePath) throws IOException {
 		File correctFile = new ClassPathResource(resourcePath).getFile();
 		return new String(Files.readAllBytes(correctFile.toPath()));
@@ -93,7 +96,7 @@ public class Util {
 		File[] sitemapFiles = sitemapDirFile.listFiles();
 		for (File sitemapFile : sitemapFiles) {
 			if (sitemapFile.isFile()) {
-				if (!sitemapFile.getName().equals("sitemap.xml")) {
+				if (!sitemapFile.getName().equals(indexFilename)) {
 					Sitemap sitemap = new Sitemap();
 					sitemap.name = sitemapFile.getName();
 					sitemap.urls = Util.parseXmlFile(sitemapFile);
