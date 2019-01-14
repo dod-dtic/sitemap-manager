@@ -23,6 +23,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -81,7 +82,7 @@ public class BadTestCases {
 		mockMvc.perform(storedJsonRequest(HttpMethod.POST, badRequestJsonDir + "missingLocation.json"))
 			.andExpect(status().isBadRequest())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-			//.andExpect(jsonPath("$.timestamp").value(String.valueOf(Instant.now().getEpochSecond())))
+			.andExpect(jsonPath("$.timestamp").value(new CloseToNowMatcher()))
 			.andExpect(jsonPath("$.status").value("400"))
 			.andExpect(jsonPath("$.error").value("Bad Request"))
 			.andExpect(jsonPath("$.exception").value("org.springframework.http.converter.HttpMessageNotReadableException"))
@@ -93,8 +94,8 @@ public class BadTestCases {
 	public void testPostBadChangeFrequency() throws Exception {
 		mockMvc.perform(storedJsonRequest(HttpMethod.POST, badRequestJsonDir + "badChangeFrequency.json"))
 			.andExpect(status().isBadRequest())
-			//.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-			//.andExpect(jsonPath("$.timestamp").value(String.valueOf(Instant.now().getEpochSecond())))
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+			.andExpect(jsonPath("$.timestamp").value(new CloseToNowMatcher()))
 			.andExpect(jsonPath("$.status").value("400"))
 			.andExpect(jsonPath("$.error").value("Bad Request"))
 			.andExpect(jsonPath("$.exception").value("org.springframework.http.converter.HttpMessageNotReadableException"))
@@ -112,7 +113,7 @@ public class BadTestCases {
 		mockMvc.perform(storedJsonRequest(HttpMethod.POST, badRequestJsonDir + "duplicateLocationsInRequest.json"))
 			.andExpect(status().isBadRequest())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-			//.andExpect(jsonPath("$.timestamp").value(String.valueOf(Instant.now().getEpochSecond())))
+			.andExpect(jsonPath("$.timestamp").value(new CloseToNowMatcher()))
 			.andExpect(jsonPath("$.status").value("400"))
 			.andExpect(jsonPath("$.error").value("Bad Request"))
 			.andExpect(jsonPath("$.exception").value("org.springframework.http.converter.HttpMessageNotReadableException"))
@@ -123,9 +124,10 @@ public class BadTestCases {
 	@Test
 	public void testPostFutureLastModified() throws Exception {
 		mockMvc.perform(storedJsonRequest(HttpMethod.POST, badRequestJsonDir + "futureLastModified.json"))
+			.andDo(print())
 			.andExpect(status().isBadRequest())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-			//.andExpect(jsonPath("$.timestamp").value(String.valueOf(Instant.now().getEpochSecond())))
+			.andExpect(jsonPath("$.timestamp").value(new CloseToNowMatcher()))
 			.andExpect(jsonPath("$.status").value("400"))
 			.andExpect(jsonPath("$.error").value("Bad Request"))
 			.andExpect(jsonPath("$.exception").value("org.springframework.http.converter.HttpMessageNotReadableException"))
@@ -138,7 +140,7 @@ public class BadTestCases {
 		mockMvc.perform(storedJsonRequest(HttpMethod.POST, badRequestJsonDir + "invalidUrl.json"))
 			.andExpect(status().isBadRequest())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-			//.andExpect(jsonPath("$.timestamp").value(String.valueOf(Instant.now().getEpochSecond())))
+			.andExpect(jsonPath("$.timestamp").value(new CloseToNowMatcher()))
 			.andExpect(jsonPath("$.status").value("400"))
 			.andExpect(jsonPath("$.error").value("Bad Request"))
 			.andExpect(jsonPath("$.exception").value("org.springframework.http.converter.HttpMessageNotReadableException"))
@@ -151,7 +153,7 @@ public class BadTestCases {
 		mockMvc.perform(storedJsonRequest(HttpMethod.POST, badRequestJsonDir + "outOfRangePriority.json"))
 			.andExpect(status().isBadRequest())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-			//.andExpect(jsonPath("$.timestamp").value(String.valueOf(Instant.now().getEpochSecond())))
+			.andExpect(jsonPath("$.timestamp").value(new CloseToNowMatcher()))
 			.andExpect(jsonPath("$.status").value("400"))
 			.andExpect(jsonPath("$.error").value("Bad Request"))
 			.andExpect(jsonPath("$.exception").value("org.springframework.http.converter.HttpMessageNotReadableException"))
