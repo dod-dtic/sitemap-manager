@@ -51,9 +51,9 @@ public class SitemapAssertions {
 		}
 
 		if (expectedTUrl.getPriority() != null) {
-			assertEquals(expectedTUrl.getPriority(), actualTUrl.getPriority());
+			assertEquals("For URL: " + actualTUrl.getLoc(), expectedTUrl.getPriority(), actualTUrl.getPriority());
 		} else {
-			assertEquals(config.getDefaultPriority(), actualTUrl.getPriority());
+			assertEquals("For URL: " + actualTUrl.getLoc(), config.getDefaultPriority(), actualTUrl.getPriority());
 		}
 	}
 
@@ -71,7 +71,7 @@ public class SitemapAssertions {
 		ordExpected.sort(comp);
 		List<TUrl> ordActual = new ArrayList<>(actual.urls);
 		ordActual.sort(comp);
-		assertEquals(ordExpected.size(), ordActual.size());
+		assertEquals("Sitemap name: " + actual.name, ordExpected.size(), ordActual.size());
 		
 		for (int i=0; i<ordExpected.size(); i++) {
 			this.compareTUrls(ordExpected.get(i), ordActual.get(i));

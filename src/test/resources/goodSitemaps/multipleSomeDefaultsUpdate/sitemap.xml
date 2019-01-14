@@ -1,6 +1,6 @@
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 	<sitemap>
-		<loc>http://www.dtic.mil/sitemap-Snafu.xml</loc>
+		<loc>http://www.dtic.mil/sitemap-Snafux.xml</loc>
 		<lastmod></lastmod>
 	</sitemap>
 	<sitemap>
@@ -8,7 +8,15 @@
 		<lastmod></lastmod>
 	</sitemap>
 	<sitemap>
-		<loc>http://www.dtic.mil/sitemap-Lorem.xml</loc>
+		<loc>http://www.dtic.mil/sitemap-Loremx.xml</loc>
+		<lastmod></lastmod>
+	</sitemap>
+	<sitemap>
+		<loc>http://www.dtic.mil/sitemap-AD100x.xml</loc>
+		<lastmod></lastmod>
+	</sitemap>
+	<sitemap>
+		<loc>http://www.dtic.mil/sitemap-Foobax.xml</loc>
 		<lastmod></lastmod>
 	</sitemap>
 </sitemapindex>
