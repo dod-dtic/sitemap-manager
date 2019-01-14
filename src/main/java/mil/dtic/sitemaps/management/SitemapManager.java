@@ -111,4 +111,85 @@ public class SitemapManager {
     	}
     	return success;
     }
+    
+
+    public boolean removeLocationIndices(IndexedLocationList locationList) {
+    	boolean success = true;
+    	
+    	IndexedLocationMap indexedLocationMap = indexedLocationMapFactory.createIndexedLocationMap(locationList);
+    	Sitemapindex sitemapIndex = ioUtility.loadSitemapIndex();
+    	
+    	Map<String,List<IndexedLocation>> locationMap = indexedLocationMap.getLocationMap();
+    	List<TSitemap> sitemapList = sitemapIndex.getSitemap();
+    	int remainingLocationsForKey = 0;
+    	if(locationMap != null && locationMap.size() > 0) {
+	    	for(String locationKey : locationMap.keySet()) {
+	    		//determine what the web location would be for current location key
+	    		String currentWebPath = sitemapIndexKeyUtility.getSitemapWebPath(configuration.getRootPathWeb(), locationKey);
+	    		//iterate over the sitemap filenames looking for a match based on the current key
+	    		TSitemap match = null;
+	    		for(TSitemap currentSitemap : sitemapList) {
+	    			if(currentSitemap.getLoc().equalsIgnoreCase(currentWebPath)) {
+	    				match = currentSitemap;
+	    				break;
+	    			}
+	    		}
+	    		//if a match was found, remove the listed locations for that key
+	    		if(match != null) {
+	    			remainingLocationsForKey = removeLocations(locationKey, locationMap.get(locationKey));
+	    			if(remainingLocationsForKey == 0) {
+	    				//if there are no remaining locations, remove this sitemap
+	    				sitemapList.remove(match);
+	    			} else if(remainingLocationsForKey > 0) {
+	    				//there is still at least 1 location in this sitemap, update the last mod
+	    				match.setLastmod(new Date());
+	    			} else {
+	    				//if we somehow encounter a negative value, assume something went wrong
+	    				success = false;
+	    				break;
+	    			}
+	    		}
+	    		//if no match was found, we have nothing further to do with this key
+	    	}
+    	}
+    	
+    	if(success) {
+    		ioUtility.saveSitemapIndex(sitemapIndex);
+    	}
+    	return success;
+    }
+    
+    public int removeLocations(String locationKey, List<IndexedLocation> locationList) {
+    	Urlset currentSitemap = ioUtility.loadSitemap(locationKey);
+    	
+    	List<TUrl> urlList = currentSitemap.getUrl();
+    	
+    	//start with a fully populated remaining number of locations
+    	int remainingLocationCount = urlList.size();
+    	
+    	if(locationList != null && locationList.size() > 0) {
+	    	for(IndexedLocation currentLocation : locationList) {
+	    		//search through the existing urlList to look for a matching item
+	    		TUrl match = null;
+	    		for(TUrl currentUrl : urlList) {
+	    			if(currentUrl.getLoc().equalsIgnoreCase(currentLocation.getLocation())) {
+	    				match = currentUrl;
+	    				break;
+	    			}
+	    		}
+	    		//if a match was found, remove it from the list
+	    		if(match != null) {
+	    			remainingLocationCount -= 1;
+	    			urlList.remove(match);
+	    		}
+	    	}
+    	}
+    	
+    	if(remainingLocationCount > 0) {
+    		ioUtility.saveSitemap(locationKey, currentSitemap);
+    	} else if(remainingLocationCount == 0) {
+    		ioUtility.deleteSitemap(locationKey);
+    	}
+    	return remainingLocationCount;
+    }
 }
