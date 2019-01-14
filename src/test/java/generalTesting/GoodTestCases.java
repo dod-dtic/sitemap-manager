@@ -1,36 +1,19 @@
 package generalTesting;
 
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.util.StdDateFormat;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import generalTesting.Util.Sitemap;
-import generalTesting.Util.SitemapCollection;
 import static generalTesting.Util.getAllSitemaps;
 import static generalTesting.Util.resourceToString;
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.function.Function;
 import mil.dtic.sitemaps.management.SitemapManagerApplication;
 import mil.dtic.sitemaps.management.configuration.SitemapManagerConfiguration;
-import mil.dtic.sitemaps.management.resources.domain.Sitemapindex;
-import mil.dtic.sitemaps.management.resources.domain.TSitemap;
-import mil.dtic.sitemaps.management.resources.domain.TUrl;
-import mil.dtic.sitemaps.management.resources.domain.Urlset;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -69,8 +52,6 @@ public class GoodTestCases {
 	private MockMvc mockMvc;
 	@Autowired
 	private SitemapManagerConfiguration config;
-	private String sitemapIndexFilename;
-	private String defaultSitemapName;
 	private static final String testResourceDirName = "goodSiteMaps";
 	private SitemapAssertions sitemapAssertions; 
 	
@@ -88,8 +69,6 @@ public class GoodTestCases {
 	@Before
 	public void setUp() throws IOException {
 		sitemapAssertions = new SitemapAssertions(config, 30000);
-		sitemapIndexFilename = config.getRootPath() + "sitemap.xml";
-		defaultSitemapName = config.getRootPath() + "sitemap-AD100x.xml";
 		mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
 		Files.createDirectories(Paths.get(config.getRootPath()));
 	}
