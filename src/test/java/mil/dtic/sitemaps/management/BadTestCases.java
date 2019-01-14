@@ -1,11 +1,10 @@
 package mil.dtic.sitemaps.management;
 
-import static generalTesting.Util.resourceToString;
+import static mil.dtic.sitemaps.management.Util.resourceToString;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import mil.dtic.sitemaps.management.SitemapManagerApplication;
 import mil.dtic.sitemaps.management.configuration.SitemapManagerConfiguration;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.junit.After;
@@ -13,21 +12,17 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -69,8 +64,6 @@ public class BadTestCases {
 	}
 
 	private MockHttpServletRequestBuilder storedJsonRequest(HttpMethod method, String requestJsonPath) throws Exception {
-		System.out.println(requestJsonPath);
-		System.out.println(resourceToString(requestJsonPath));
 		return request(method, "/sitemap-manager")
 			.content(resourceToString(requestJsonPath))
 			.contentType(MediaType.APPLICATION_JSON)
@@ -85,9 +78,7 @@ public class BadTestCases {
 	 */
 	@Test
 	public void testPostMissinglocation() throws Exception {
-		MockHttpServletRequestBuilder foo = storedJsonRequest(HttpMethod.POST, badRequestJsonDir + "missingLocation.json");
-		mockMvc.perform(foo)
-		//mockMvc.perform(storedJsonRequest(HttpMethod.POST, badRequestJsonDir + "missingLocation.json"))
+		mockMvc.perform(storedJsonRequest(HttpMethod.POST, badRequestJsonDir + "missingLocation.json"))
 			.andExpect(status().isBadRequest())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			//.andExpect(jsonPath("$.timestamp").value(String.valueOf(Instant.now().getEpochSecond())))
@@ -100,10 +91,8 @@ public class BadTestCases {
 
 	@Test
 	public void testPostBadChangeFrequency() throws Exception {
-		ResultActions foo = mockMvc.perform(storedJsonRequest(HttpMethod.POST, badRequestJsonDir + "badChangeFrequency.json"));
-
-			foo.andExpect(status().isBadRequest())
-			.andDo(print())
+		mockMvc.perform(storedJsonRequest(HttpMethod.POST, badRequestJsonDir + "badChangeFrequency.json"))
+			.andExpect(status().isBadRequest())
 			//.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			//.andExpect(jsonPath("$.timestamp").value(String.valueOf(Instant.now().getEpochSecond())))
 			.andExpect(jsonPath("$.status").value("400"))
@@ -121,7 +110,6 @@ public class BadTestCases {
 	@Test
 	public void testPostDuplicateLocationsInRequest() throws Exception {
 		mockMvc.perform(storedJsonRequest(HttpMethod.POST, badRequestJsonDir + "duplicateLocationsInRequest.json"))
-			.andDo(print())
 			.andExpect(status().isBadRequest())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			//.andExpect(jsonPath("$.timestamp").value(String.valueOf(Instant.now().getEpochSecond())))
@@ -135,7 +123,6 @@ public class BadTestCases {
 	@Test
 	public void testPostFutureLastModified() throws Exception {
 		mockMvc.perform(storedJsonRequest(HttpMethod.POST, badRequestJsonDir + "futureLastModified.json"))
-			.andDo(print())
 			.andExpect(status().isBadRequest())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			//.andExpect(jsonPath("$.timestamp").value(String.valueOf(Instant.now().getEpochSecond())))
@@ -149,7 +136,6 @@ public class BadTestCases {
 	@Test
 	public void testPostInvalidUrl() throws Exception {
 		mockMvc.perform(storedJsonRequest(HttpMethod.POST, badRequestJsonDir + "invalidUrl.json"))
-			.andDo(print())
 			.andExpect(status().isBadRequest())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			//.andExpect(jsonPath("$.timestamp").value(String.valueOf(Instant.now().getEpochSecond())))
@@ -163,7 +149,6 @@ public class BadTestCases {
 	@Test
 	public void testOutOfRangePriority() throws Exception {
 		mockMvc.perform(storedJsonRequest(HttpMethod.POST, badRequestJsonDir + "outOfRangePriority.json"))
-			.andDo(print())
 			.andExpect(status().isBadRequest())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			//.andExpect(jsonPath("$.timestamp").value(String.valueOf(Instant.now().getEpochSecond())))
