@@ -3,6 +3,10 @@ package generalTesting;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import generalTesting.Util.Sitemap;
+import generalTesting.Util.SitemapCollection;
+import static generalTesting.Util.getAllSitemaps;
+import static generalTesting.Util.resourceToString;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -68,7 +72,7 @@ public class GoodTestCases {
 	private String sitemapIndexFilename;
 	private String defaultSitemapName;
 	private static final String testResourceDirName = "goodSiteMaps";
-	private static final long allowableDelta = 30000;
+	private SitemapAssertions sitemapAssertions; 
 	
 	public GoodTestCases() {
 	}
@@ -83,6 +87,7 @@ public class GoodTestCases {
 	
 	@Before
 	public void setUp() throws IOException {
+		sitemapAssertions = new SitemapAssertions(config, 30000);
 		sitemapIndexFilename = config.getRootPath() + "sitemap.xml";
 		defaultSitemapName = config.getRootPath() + "sitemap-AD100x.xml";
 		mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
@@ -92,189 +97,6 @@ public class GoodTestCases {
 	@After
 	public void tearDown() throws IOException{
 		FileUtils.deleteDirectory(new File(config.getRootPath()));
-	}
-
-	private String resourceToString(String resourcePath) throws IOException {
-		File correctFile = new ClassPathResource(resourcePath).getFile();
-		return new String(Files.readAllBytes(correctFile.toPath()));
-	}
-
-	private String fileToString(String filePath) throws IOException {
-		byte[] encoded = Files.readAllBytes(Paths.get(filePath));
-		return new String(encoded, Charset.forName("utf-8"));
-	}
-
-	/**
-	 * @param expectedResourcePath
-	 * @param actualXmlPath 
-	 */
-	private void compareTUrls(TUrl expectedTUrl, TUrl actualTUrl) throws IOException {
-		assertEquals(expectedTUrl.getLoc(), actualTUrl.getLoc());
-
-		if (expectedTUrl.getLastmod() != null) {
-			assertEquals(expectedTUrl.getLastmod(), actualTUrl.getLastmod());
-		} else {
-			long now = new Date().getTime();
-			long createdTime = actualTUrl.getLastmod().getTime();
-			// Checking that createdTime isn't after now shouldn't be necessary but can be done if wanted.
-			assertTrue((now - allowableDelta) < createdTime);
-		}
-
-		// Since the defaults depend on teh test-application.properties, can't put static values in expected XMLs.
-		if (expectedTUrl.getChangefreq() != null) {
-			assertEquals(expectedTUrl.getChangefreq(), actualTUrl.getChangefreq());
-		} else {
-			assertEquals(config.getDefaultChangeFrequency(), actualTUrl.getChangefreq());
-		}
-
-		if (expectedTUrl.getPriority() != null) {
-			assertEquals(expectedTUrl.getPriority(), actualTUrl.getPriority());
-		} else {
-			assertEquals(config.getDefaultPriority(), actualTUrl.getPriority());
-		}
-	}
-
-	/**
-	 * I'm unsure if I should use DOM or just use Jackson to compare the XML so
-	 * I'm creating this function to easily change it later if we change our mind.
-	 * @param xmlFile
-	 * @return
-	 * @throws IOException 
-	 */
-	private List<TUrl> parseXmlFile(File xmlFile) throws IOException {
-		Urlset urlset = null;
-		if(xmlFile.exists() && !xmlFile.isDirectory()) {
-			XmlMapper mapper = new XmlMapper();
-			mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-			mapper.setDateFormat(new StdDateFormat());
-			urlset = mapper.readValue(xmlFile, Urlset.class);
-		} else {
-			fail("Didn't find XML files correctly.");
-		}
-
-		return urlset.getUrl();
-	}
-
-	private class SitemapCollection {
-		public Sitemapindex sitemapindex;
-		public List<Sitemap> sitemaps;
-
-		public SitemapCollection () {
-			sitemaps = new ArrayList<>();
-		}
-	}
-
-	private class Sitemap {
-		public String name;
-		// Could use Urlset, although do we need to?
-		public List<TUrl> urls;
-	}
-
-	private Sitemapindex parseSitemapIndex(File file) throws IOException {
-		Sitemapindex foundSitemapIndex = null;
-		if (file.isFile()) {
-			XmlMapper mapper = new XmlMapper();
-			mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-			mapper.setDateFormat(new StdDateFormat());
-			foundSitemapIndex = mapper.readValue(file, Sitemapindex.class);
-		} else {
-			fail("Can't find sitemap index file.");
-		}
-		return foundSitemapIndex;
-	}
-
-	/**
-	 * Possibly should use ObjectFactory?
-	 * @param sitemapDirFile
-	 * @return
-	 * @throws IOException 
-	 */
-	private SitemapCollection getAllSitemaps(File sitemapDirFile) throws IOException {
-		SitemapCollection sitemaps = new SitemapCollection();
-		//File sitemapDirFile = new File(sitemapDir);
-		File[] sitemapFiles = sitemapDirFile.listFiles();
-		for (File sitemapFile : sitemapFiles) {
-			if (sitemapFile.isFile()) {
-				if (!sitemapFile.getName().equals("sitemap.xml")) {
-					Sitemap sitemap = new Sitemap();
-					sitemap.name = sitemapFile.getName();
-					sitemap.urls = parseXmlFile(sitemapFile);
-					sitemaps.sitemaps.add(sitemap);
-				} else {
-					sitemaps.sitemapindex = parseSitemapIndex(sitemapFile);
-				}
-			} else {
-				// Possibly throw exception instead.
-				fail("Problem getting sitemap file.");
-			}
-		}
-		return sitemaps;
-	}
-
-	/**
-	 * The comparison could be done so much better. Just want to get it done though.
-	 * Improve later.
-	 * @param expected
-	 * @param actual 
-	 */
-	private void compareSitemaps(Sitemap expected, Sitemap actual) throws IOException {
-		assertEquals(expected.name, actual.name);
-
-		Comparator<TUrl> comp = (expectedTUrl, actualTUrl) -> expectedTUrl.getLoc().compareTo(actualTUrl.getLoc());
-		List<TUrl> ordExpected = new ArrayList<>(expected.urls);
-		ordExpected.sort(comp);
-		List<TUrl> ordActual = new ArrayList<>(actual.urls);
-		ordActual.sort(comp);
-		assertEquals(ordExpected.size(), ordActual.size());
-		
-		for (int i=0; i<ordExpected.size(); i++) {
-			compareTUrls(ordExpected.get(i), ordActual.get(i));
-		}
-	}
-
-	/**
-	 * If I could figure out how to pass the stuff in the for loop in as a
-	 * lambda to some function I could simplify several functions a lot.
-	 * @param expected
-	 * @param actual 
-	 */
-	private void compareSitemapIndices(Sitemapindex expected, Sitemapindex actual) {
-		Comparator<TSitemap> comp = (expectedTSitemap, actualTSitemap) -> expectedTSitemap.getLoc().compareTo(actualTSitemap.getLoc());
-		List<TSitemap> ordExpected = new ArrayList<>(expected.getSitemap());
-		ordExpected.sort(comp);
-		List<TSitemap> ordActual = new ArrayList<>(actual.getSitemap());
-		ordActual.sort(comp);
-		assertEquals(ordExpected.size(), ordActual.size());
-		
-		for (int i=0; i<ordExpected.size(); i++) {
-			long now = new Date().getTime();
-			long createdTime = ordActual.get(i).getLastmod().getTime();
-			// Checking that createdTime isn't after now shouldn't be necessary but can be done if wanted.
-			assertTrue((now - allowableDelta) < createdTime);
-			assertEquals(ordExpected.get(i).getLoc(), ordActual.get(i).getLoc());
-		}
-	}
-
-	/**
-	 * Could check that sitemap index locations match file names, but we have
-	 * an expected sitemap index which should assure this anyways (if the actual
-	 * sitemap index and sitemaps are correct. It would fail anyways if they weren't)
-	 * @param expected
-	 * @param actual 
-	 */
-	private void compareSitemapCollections(SitemapCollection expected, SitemapCollection actual) throws IOException {
-		compareSitemapIndices(expected.sitemapindex, actual.sitemapindex);
-
-		Comparator<Sitemap> comp = (expectedSitemap, actualSitemap) -> expectedSitemap.name.compareTo(actualSitemap.name);
-		List<Sitemap> ordExpected = new ArrayList<>(expected.sitemaps);
-		ordExpected.sort(comp);
-		List<Sitemap> ordActual = new ArrayList<>(actual.sitemaps);
-		ordActual.sort(comp);
-		assertEquals(ordExpected.size(), ordActual.size());
-		
-		for (int i=0; i<ordExpected.size(); i++) {
-			compareSitemaps(ordExpected.get(i), ordActual.get(i));
-		}
 	}
 
 	private void storedJsonPostRequest(String requestJsonPath) throws Exception {
@@ -296,7 +118,7 @@ public class GoodTestCases {
 	private void generalPostTest(String requestJsonPath, String expectedDirectoryPath) throws Exception {
 		storedJsonPostRequest(requestJsonPath);
 
-		compareSitemapCollections(getAllSitemaps(new ClassPathResource(expectedDirectoryPath).getFile()), getAllSitemaps(new File(config.getRootPath())));
+		sitemapAssertions.compareSitemapCollections(getAllSitemaps(new ClassPathResource(expectedDirectoryPath).getFile()), getAllSitemaps(new File(config.getRootPath())));
 	}
 
 	private void storedJsonPutRequest(String requestJsonPath) throws Exception {
@@ -314,7 +136,7 @@ public class GoodTestCases {
 	private void generalPutTest(String requestJsonPath, String expectedDirectoryPath) throws Exception {
 		storedJsonPutRequest(requestJsonPath);
 
-		compareSitemapCollections(getAllSitemaps(new ClassPathResource(expectedDirectoryPath).getFile()), getAllSitemaps(new File(config.getRootPath())));
+		sitemapAssertions.compareSitemapCollections(getAllSitemaps(new ClassPathResource(expectedDirectoryPath).getFile()), getAllSitemaps(new File(config.getRootPath())));
 	}
 
 	@Test
