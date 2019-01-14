@@ -1,4 +1,4 @@
-package generalTesting;
+package mil.dtic.sitemaps.management.integrationTests;
 
 import static generalTesting.Util.resourceToString;
 import java.io.File;
