@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import mil.dtic.sitemaps.management.SitemapManagerApplication;
+import mil.dtic.sitemaps.management.Util.SitemapCollection;
+import static mil.dtic.sitemaps.management.Util.storedJsonRequest;
 import mil.dtic.sitemaps.management.configuration.SitemapManagerConfiguration;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.junit.After;
@@ -24,8 +26,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -49,7 +53,7 @@ public class GoodTestCases {
 	private SitemapAssertions sitemapAssertions; 
 	// Querying it outside of code you have to use "/sitemap-manager/sitemap-manager", however I guess doing it within the code gets rid of one of the "/sitemap-managers".
 	private static final String basicEndpoint = "/sitemap-manager";
-	private static final String requestDirPath = "requestJson/";
+	private static final String requestDirPath = "goodRequestJson/";
 	
 	public GoodTestCases() {
 	}
@@ -75,11 +79,11 @@ public class GoodTestCases {
 	}
 
 	private void storedJsonPostRequest(String requestJsonPath) throws Exception {
-	MockHttpServletRequestBuilder postRequest = request(HttpMethod.POST, basicEndpoint)
+		MockHttpServletRequestBuilder postRequest = request(HttpMethod.POST, basicEndpoint)
 			.content(resourceToString(requestJsonPath))
 			.contentType(MediaType.APPLICATION_JSON)
 			.accept(MediaType.TEXT_PLAIN);
-
+		
 		mockMvc.perform(postRequest)
 			.andExpect(status().isCreated())
 			.andExpect(content().contentType("text/plain;charset=UTF-8"))
@@ -112,6 +116,38 @@ public class GoodTestCases {
 		storedJsonPutRequest(requestJsonPath);
 
 		sitemapAssertions.compareSitemapCollections(getAllSitemaps(new ClassPathResource(expectedDirectoryPath).getFile()), getAllSitemaps(new File(config.getRootPath())));
+	}
+
+	private void storedJsonDeleteRequest(String requestJsonPath) throws Exception {
+		MockHttpServletRequestBuilder postRequest = request(HttpMethod.DELETE, "/sitemap-manager")
+			.content(resourceToString(requestJsonPath))
+			.contentType(MediaType.APPLICATION_JSON)
+			.accept(MediaType.TEXT_PLAIN);
+
+		mockMvc.perform(postRequest)
+			.andExpect(status().isOk())
+			.andExpect(content().contentType("text/plain;charset=UTF-8"))
+			.andExpect(content().string("updated"));
+
+		// Need to check and make sure the files are deleted.
+	}
+
+	private static void deleteExpects(ResultActions response) throws Exception {
+		response.andExpect(status().isOk())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+			.andExpect(content().string("deleted"));
+	}
+
+	private void generalDeleteTest(String postRequestPath, String postExpectedPath, String deleteRequestPath, String deleteExpectedPath) throws Exception {
+		// Create
+		generalPostTest(postRequestPath, postExpectedPath);
+		// Delete
+		deleteExpects(mockMvc.perform(storedJsonRequest(HttpMethod.DELETE, deleteRequestPath)));
+		// Check
+		sitemapAssertions.compareSitemapCollections(
+			getAllSitemaps(new ClassPathResource(deleteExpectedPath).getFile()),
+			getAllSitemaps(new File(config.getRootPath()))
+		);
 	}
 
 	@Test
@@ -224,5 +260,72 @@ public class GoodTestCases {
 	public void testPutUpdate() throws Exception {
 		generalPutTest(requestDirPath + "multipleSomeDefaults.json", testResourceDirName + "/multipleSomeDefaults");
 		generalPutTest(requestDirPath + "multipleSomeDefaultsUpdate.json", testResourceDirName + "/multipleSomeDefaultsUpdate");
+	}
+
+	@Test
+	public void testDeleteEmpty() throws Exception {
+		generalDeleteTest(
+			requestDirPath + "emptyList.json",
+			testResourceDirName + "/empty",
+			requestDirPath + "deleteEmpty.json",
+			testResourceDirName + "/empty"
+		);
+	}
+
+	@Test
+	public void testDeleteWithLocation() throws Exception {
+		generalDeleteTest(
+			requestDirPath + "justLocation.json",
+			testResourceDirName + "/justLocation",
+			requestDirPath + "deleteWithLocation.json",
+			testResourceDirName + "/empty"
+		);
+	}
+
+	@Test
+	public void testDeleteWithName() throws Exception {
+		generalDeleteTest(
+			requestDirPath + "withName.json",
+			testResourceDirName + "/withName",
+			requestDirPath + "deleteWithName.json",
+			testResourceDirName + "/empty"
+		);
+	}
+
+	/**
+	 * If sitemaps files are deleted need to test that files with multiple
+	 * URLs can have individual URLs deleted but not whole files.
+	 * @throws Exception 
+	 */
+	@Test
+	public void testDeleteMultiple() throws Exception {
+		generalDeleteTest(
+			requestDirPath + "multipleSomeDefaults.json",
+			testResourceDirName + "/multipleSomeDefaults",
+			requestDirPath + "deleteMultiple.json",
+			testResourceDirName + "/empty"
+		);
+	}
+
+	// Need another test for deleting some files as well as another for deleting some Urls but not whole file.
+
+	@Test
+	public void testDeleteSingleInMultipleFile() throws Exception {
+		generalDeleteTest(
+			requestDirPath + "multipleSomeDefaults.json",
+			testResourceDirName + "/multipleSomeDefaults",
+			requestDirPath + "deleteWithName.json",
+			testResourceDirName + "/deleteSingleInMultipleFile"
+		);
+	}
+
+	@Test
+	public void testDeleteMultipleSubsets() throws Exception {
+		generalDeleteTest(
+			requestDirPath + "multipleAcrossMultipleFiles.json",
+			testResourceDirName + "/multipleAcrossMultipleFiles",
+			requestDirPath + "deleteMultipleAcrossMultipleFiles.json",
+			testResourceDirName + "/deleteMultipleAcrossMultipleFiles"
+		);
 	}
 }

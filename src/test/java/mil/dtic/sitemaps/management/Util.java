@@ -16,8 +16,12 @@ import static org.junit.Assert.fail;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request;
 
 /**
  *
@@ -109,6 +113,16 @@ public class Util {
 				fail("Problem getting sitemap file.");
 			}
 		}
+		if (sitemaps.sitemapindex == null) {
+			fail("No index file found.");
+		}
 		return sitemaps;
+	}
+
+	public static MockHttpServletRequestBuilder storedJsonRequest(HttpMethod method, String requestJsonPath) throws Exception {
+		return request(method, "/sitemap-manager")
+			.content(resourceToString(requestJsonPath))
+			.contentType(MediaType.APPLICATION_JSON)
+			.accept(MediaType.APPLICATION_JSON);
 	}
 }
