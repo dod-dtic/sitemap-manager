@@ -56,7 +56,7 @@ public class SimpleApiTests {
 	@Autowired
 	private SitemapManagerConfiguration config;
 	private static final String simpleRequestDirName = "simpleRequests/";
-	private static final String simpleEndpoint = "/sitemap-manager/simple";
+	private static final String simpleEndpoint = "/simple";
 	private static final String testResourceDirName = "simpleSiteMaps/";
 	private SitemapAssertions sitemapAssertions;
 	private final long allowableDelta = 10000;

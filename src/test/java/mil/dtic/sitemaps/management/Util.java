@@ -8,18 +8,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import mil.dtic.sitemaps.management.SitemapManagerApplication;
 import mil.dtic.sitemaps.management.resources.domain.Sitemapindex;
 import mil.dtic.sitemaps.management.resources.domain.TUrl;
 import mil.dtic.sitemaps.management.resources.domain.Urlset;
 import static org.junit.Assert.fail;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request;
 
@@ -120,7 +115,7 @@ public class Util {
 	}
 
 	public static MockHttpServletRequestBuilder storedJsonRequest(HttpMethod method, String requestJsonPath) throws Exception {
-		return request(method, "/sitemap-manager")
+		return request(method, "/")
 			.content(resourceToString(requestJsonPath))
 			.contentType(MediaType.APPLICATION_JSON)
 			.accept(MediaType.APPLICATION_JSON);

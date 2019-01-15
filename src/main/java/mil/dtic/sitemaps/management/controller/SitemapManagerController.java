@@ -22,7 +22,7 @@ public class SitemapManagerController {
     @Autowired
     protected IndexedLocationListFactory indexedLocationListFactory;
     
-    @RequestMapping(value={"/sitemap-manager"}, method=RequestMethod.POST)
+    @RequestMapping(value={"/"}, method=RequestMethod.POST)
     public ResponseEntity<String> addLocations(@RequestBody() IndexedLocationList locationList) {
     	boolean success = sitemapManager.addOrUpdateLocationIndices(locationList);
     	if(success) {
@@ -32,7 +32,7 @@ public class SitemapManagerController {
     	}
     }
     
-    @RequestMapping(value={"/sitemap-manager"}, method=RequestMethod.PUT)
+    @RequestMapping(value={"/"}, method=RequestMethod.PUT)
     public ResponseEntity<String> updateLocations(@RequestBody() IndexedLocationList locationList) {
     	boolean success = sitemapManager.addOrUpdateLocationIndices(locationList);
     	if(success) {
@@ -42,7 +42,7 @@ public class SitemapManagerController {
     	}
     }
     
-    @RequestMapping(value={"/sitemap-manager"}, method=RequestMethod.DELETE)
+    @RequestMapping(value={"/"}, method=RequestMethod.DELETE)
     public ResponseEntity<String> removeLocations(@RequestBody() IndexedLocationList locationList) {
     	boolean success = sitemapManager.removeLocationIndices(locationList);
     	if(success) {
@@ -53,7 +53,7 @@ public class SitemapManagerController {
     }
     
 
-    @RequestMapping(value={"/sitemap-manager/simple"}, method=RequestMethod.POST)
+    @RequestMapping(value={"/simple"}, method=RequestMethod.POST)
     public ResponseEntity<String> addLocations(@RequestBody() String fileContent) {
     	IndexedLocationList locationList;
 		try {
@@ -64,7 +64,7 @@ public class SitemapManagerController {
     	return addLocations(locationList);
     }
 
-    @RequestMapping(value={"/sitemap-manager/simple"}, method=RequestMethod.PUT)
+    @RequestMapping(value={"/simple"}, method=RequestMethod.PUT)
     public ResponseEntity<String> updateLocations(@RequestBody() String fileContent) {
     	IndexedLocationList locationList;
 		try {
@@ -75,7 +75,7 @@ public class SitemapManagerController {
     	return updateLocations(locationList);
     }
 
-    @RequestMapping(value={"/sitemap-manager/simple"}, method=RequestMethod.DELETE)
+    @RequestMapping(value={"/simple"}, method=RequestMethod.DELETE)
     public ResponseEntity<String> removeLocations(@RequestBody() String fileContent) {
     	IndexedLocationList locationList;
 		try {

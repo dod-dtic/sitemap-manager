@@ -6,8 +6,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import mil.dtic.sitemaps.management.SitemapManagerApplication;
-import mil.dtic.sitemaps.management.Util.SitemapCollection;
 import static mil.dtic.sitemaps.management.Util.storedJsonRequest;
 import mil.dtic.sitemaps.management.configuration.SitemapManagerConfiguration;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
@@ -29,7 +27,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -52,7 +49,7 @@ public class GoodTestCases {
 	private static final String testResourceDirName = "goodSiteMaps";
 	private SitemapAssertions sitemapAssertions; 
 	// Querying it outside of code you have to use "/sitemap-manager/sitemap-manager", however I guess doing it within the code gets rid of one of the "/sitemap-managers".
-	private static final String basicEndpoint = "/sitemap-manager";
+	private static final String basicEndpoint = "/";
 	private static final String requestDirPath = "goodRequestJson/";
 	
 	public GoodTestCases() {

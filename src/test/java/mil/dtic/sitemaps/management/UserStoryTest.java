@@ -45,7 +45,7 @@ import org.springframework.web.context.WebApplicationContext;
 @SpringBootTest
 public class UserStoryTest {
 
-    private static final String SIMPLE_ENDPOINT = "/sitemap-manager/simple";
+    private static final String SIMPLE_ENDPOINT = "/simple";
 
     private static final int MAX_ENTRIES = 10000;
 

@@ -42,7 +42,7 @@ public class BadTestCases {
 	@Autowired
 	private SitemapManagerConfiguration config;
 	private static final String badRequestJsonDir = "badRequestJson/";
-	private static final String basicEndpoint = "/sitemap-manager";
+	private static final String basicEndpoint = "/";
 	
 	public BadTestCases() {
 	}
