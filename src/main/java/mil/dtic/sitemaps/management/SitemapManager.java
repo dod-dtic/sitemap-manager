@@ -21,6 +21,10 @@ import mil.dtic.sitemaps.management.resources.domain.Urlset;
 import mil.dtic.sitemaps.management.resources.util.IOUtility;
 import mil.dtic.sitemaps.management.resources.util.SitemapIndexKeyUtility;
 
+/**
+ * Manages locations in sitemap files.
+ * @author Battelle
+ */
 @Component
 public class SitemapManager {
     @Autowired
@@ -38,6 +42,12 @@ public class SitemapManager {
 	@Autowired
 	protected SitemapIndexKeyUtility sitemapIndexKeyUtility;
     
+    /**
+     * Add or update locations in site map.  Name of map files are determined 
+     * systematically.
+     * @param locationList List of locations to update
+     * @return 
+     */
     public boolean addOrUpdateLocationIndices(IndexedLocationList locationList) {
     	boolean success = true;
     	ObjectFactory objectFactory = new ObjectFactory();
@@ -79,6 +89,12 @@ public class SitemapManager {
     	return success;
     }
     
+    /**
+     * Add or update locations in site map.  Name of map file is provided.
+     * @param locationKey List of locations to update
+     * @param locationList Name of sitemap file to add or update entries in
+     * @return 
+     */
     public boolean addOrUpdateLocations(String locationKey, List<IndexedLocation> locationList) {
     	boolean success = true;
     	Urlset currentSitemap = ioUtility.loadSitemap(locationKey);
@@ -112,7 +128,11 @@ public class SitemapManager {
     	return success;
     }
     
-
+    /**
+     * Remove locations from site map.  Name of map files are determined systematically.
+     * @param locationList List of locations to remove
+     * @return 
+     */
     public boolean removeLocationIndices(IndexedLocationList locationList) {
     	boolean success = true;
     	
@@ -159,6 +179,12 @@ public class SitemapManager {
     	return success;
     }
     
+    /**
+     * Remove locations from site map.  Name of map file is provided.
+     * @param locationKey Name of sitemap file to remove from
+     * @param locationList List of locations to remove
+     * @return 
+     */
     public int removeLocations(String locationKey, List<IndexedLocation> locationList) {
     	Urlset currentSitemap = ioUtility.loadSitemap(locationKey);
     	

@@ -8,6 +8,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import mil.dtic.sitemaps.management.resources.domain.TChangeFreq;
 
+/**
+ * Location entry in sitemap file
+ * @author Battelle
+ */
 public class IndexedLocation implements Serializable {
     private static final long serialVersionUID = 7735986239340177169L;
     
@@ -18,6 +22,10 @@ public class IndexedLocation implements Serializable {
     private TChangeFreq changeFrequency;
     private BigDecimal priority;
     
+    /**
+     * 
+     * @return Location (URL)
+     */
 	public String getLocation() {
 		return location;
 	}
@@ -25,6 +33,10 @@ public class IndexedLocation implements Serializable {
 		this.location = location;
 	}
 	
+    /**
+     * 
+     * @return Name of sitemap containing location entry
+     */
 	public String getName() {
 		return name;
 	}
@@ -32,6 +44,10 @@ public class IndexedLocation implements Serializable {
 		this.name = name;
 	}
 	
+    /**
+     * 
+     * @return Date contents of location last modified
+     */
 	public Date getLastModified() {
 		return lastModified;
 	}
@@ -39,6 +55,10 @@ public class IndexedLocation implements Serializable {
 		this.lastModified = lastModified;
 	}
 	
+    /**
+     * 
+     * @return Frequency with which contents of location changes
+     */
 	public TChangeFreq getChangeFrequency() {
 		return changeFrequency;
 	}
@@ -46,6 +66,10 @@ public class IndexedLocation implements Serializable {
 		this.changeFrequency = changeFrequency;
 	}
 	
+    /**
+     * 
+     * @return Importance of location
+     */
 	public BigDecimal getPriority() {
 		return priority;
 	}

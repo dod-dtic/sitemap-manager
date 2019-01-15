@@ -12,16 +12,30 @@ import org.springframework.stereotype.Component;
 import mil.dtic.sitemaps.management.resources.IndexedLocation;
 import mil.dtic.sitemaps.management.resources.IndexedLocationList;
 
+/**
+ * Factory for creating indexed location lists
+ * @author Battelle
+ */
 @Component
 public class IndexedLocationListFactory {
 	
 	@Autowired
 	private IndexedLocationFactory indexedLocationFactory;
 	
+    /**
+     * 
+     * @return New, empty indexed location list object
+     */
 	public IndexedLocationList createIndexedLocationList() {
 		return new IndexedLocationList();
 	}
 
+    /**
+     * 
+     * @param simpleList Newline-delimited list of URLs
+     * @return New indexed location list containing all locations from simpleList
+     * @throws IOException 
+     */
 	public IndexedLocationList createIndexedLocationList(String simpleList) throws IOException {
 		IndexedLocationList returnList = new IndexedLocationList();
 		List<IndexedLocation> listOfParsedLocations = new ArrayList<IndexedLocation>();
