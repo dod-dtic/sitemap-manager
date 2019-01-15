@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import mil.dtic.sitemaps.management.resources.IndexedLocation;
 import mil.dtic.sitemaps.management.resources.IndexedLocationList;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Factory for creating indexed location lists
@@ -38,11 +39,11 @@ public class IndexedLocationListFactory {
      */
 	public IndexedLocationList createIndexedLocationList(String simpleList) throws IOException {
 		IndexedLocationList returnList = new IndexedLocationList();
-		List<IndexedLocation> listOfParsedLocations = new ArrayList<IndexedLocation>();
+		List<IndexedLocation> listOfParsedLocations = new ArrayList<>();
 		//read the string line by line, each line containing a location
 		BufferedReader reader = new BufferedReader(new StringReader(simpleList));
         String locationString = reader.readLine();
-        while (locationString != null) {
+        while (StringUtils.isNotBlank(locationString)) {
         	IndexedLocation newLocation = indexedLocationFactory.createIndexedLocation(locationString);
         	listOfParsedLocations.add(newLocation);
         	locationString = reader.readLine();
