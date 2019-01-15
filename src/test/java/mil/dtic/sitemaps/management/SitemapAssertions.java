@@ -2,6 +2,7 @@ package mil.dtic.sitemaps.management;
 
 import mil.dtic.sitemaps.management.Util.Sitemap;
 import mil.dtic.sitemaps.management.Util.SitemapCollection;
+import static mil.dtic.sitemaps.management.Util.parseXmlFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
