@@ -7,6 +7,10 @@ import org.springframework.stereotype.Component;
 
 import mil.dtic.sitemaps.management.resources.domain.TChangeFreq;
 
+/**
+ * Manages configurations for sitemap manager
+ * @author Battelle
+ */
 @Component
 @ConfigurationProperties("sitemap.manager")
 public class SitemapManagerConfiguration {
@@ -16,6 +20,10 @@ public class SitemapManagerConfiguration {
     private BigDecimal defaultPriority;
     private TChangeFreq defaultChangeFrequency;
 
+    /**
+     * 
+     * @return The directory path in which sitemap files are created
+     */
     public String getRootPath() {
         return rootPath;
     }
@@ -24,6 +32,10 @@ public class SitemapManagerConfiguration {
         this.rootPath = rootPath;
     }
 
+    /**
+     * 
+     * @return The root web path for sitemap locations
+     */
     public String getRootPathWeb() {
         return rootPathWeb;
     }
@@ -32,6 +44,10 @@ public class SitemapManagerConfiguration {
         this.rootPathWeb = rootPathWeb;
     }
 
+    /**
+     * 
+     * @return The number of characters to use in automatically determining sitemap file names.
+     */
     public int getKeyLength() {
         return keyLength;
     }
@@ -40,6 +56,10 @@ public class SitemapManagerConfiguration {
         this.keyLength = keyLength;
     }
 
+    /**
+     * 
+     * @return The default priority level to use if no priority is given, for an entry.
+     */
     public BigDecimal getDefaultPriority() {
         return defaultPriority;
     }
@@ -48,6 +68,10 @@ public class SitemapManagerConfiguration {
         this.defaultPriority = defaultPriority;
     }
 
+    /**
+     * 
+     * @return The default change frequency to use if no change frequency is given, for an entry.
+     */
     public TChangeFreq getDefaultChangeFrequency() {
         return defaultChangeFrequency;
     }

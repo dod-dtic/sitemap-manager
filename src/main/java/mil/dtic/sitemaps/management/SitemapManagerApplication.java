@@ -8,6 +8,10 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 @SpringBootApplication
 public class SitemapManagerApplication extends SpringBootServletInitializer {
 
+    /**
+     * Entry point into application
+     * @param args command line arguments
+     */
 	public static void main(String[] args) {
 		SpringApplication.run(SitemapManagerApplication.class, args);
 	}
