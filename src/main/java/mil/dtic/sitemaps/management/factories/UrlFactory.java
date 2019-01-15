@@ -41,10 +41,10 @@ public class UrlFactory {
     public TUrl updateTUrl (TUrl url, IndexedLocation location) {
     	url.setLoc(location.getLocation());
     	
-    	//only update this value if given a non-null value, or if a default is needed
+    	// update with value if given, else use current time 
     	if(location.getLastModified() != null) {
     		url.setLastmod(location.getLastModified());
-    	} else if(url.getLastmod() == null) {
+    	} else {
     		url.setLastmod(new Date());
     	}
 
