@@ -149,8 +149,98 @@ public class BadTestCases {
 	}
 
 	@Test
-	public void testOutOfRangePriority() throws Exception {
+	public void testPostOutOfRangePriority() throws Exception {
 		mockMvc.perform(storedJsonRequest(HttpMethod.POST, badRequestJsonDir + "outOfRangePriority.json"))
+			.andExpect(status().isBadRequest())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+			.andExpect(jsonPath("$.timestamp").value(new CloseToNowMatcher()))
+			.andExpect(jsonPath("$.status").value("400"))
+			.andExpect(jsonPath("$.error").value("Bad Request"))
+			.andExpect(jsonPath("$.exception").value("org.springframework.http.converter.HttpMessageNotReadableException"))
+			.andExpect(jsonPath("$.message").value("Required request body is missing: public org.springframework.http.ResponseEntity<java.lang.String> mil.dtic.sitemaps.management.controller.SitemapManagerController.addLocations(mil.dtic.sitemaps.management.resources.IndexedLocationList)"))
+			.andExpect(jsonPath("$.path").value("/sitemap-manager"));
+	}
+
+	/**
+	 * TODO check that a sitemap file and index weren't created.
+	 * This should return a 400 response rather than an unhandled exception and 500 response.
+	 * Might be handled better with newer changes.
+	 * @throws Exception 
+	 */
+	@Test
+	public void testPutMissinglocation() throws Exception {
+		mockMvc.perform(storedJsonRequest(HttpMethod.PUT, badRequestJsonDir + "missingLocation.json"))
+			.andExpect(status().isBadRequest())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+			.andExpect(jsonPath("$.timestamp").value(new CloseToNowMatcher()))
+			.andExpect(jsonPath("$.status").value("400"))
+			.andExpect(jsonPath("$.error").value("Bad Request"))
+			.andExpect(jsonPath("$.exception").value("org.springframework.http.converter.HttpMessageNotReadableException"))
+			.andExpect(jsonPath("$.message").value("Required request body is missing: public org.springframework.http.ResponseEntity<java.lang.String> mil.dtic.sitemaps.management.controller.SitemapManagerController.addLocations(mil.dtic.sitemaps.management.resources.IndexedLocationList)"))
+			.andExpect(jsonPath("$.path").value("/sitemap-manager"));
+	}
+
+	@Test
+	public void testPutBadChangeFrequency() throws Exception {
+		mockMvc.perform(storedJsonRequest(HttpMethod.PUT, badRequestJsonDir + "badChangeFrequency.json"))
+			.andExpect(status().isBadRequest())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+			.andExpect(jsonPath("$.timestamp").value(new CloseToNowMatcher()))
+			.andExpect(jsonPath("$.status").value("400"))
+			.andExpect(jsonPath("$.error").value("Bad Request"))
+			.andExpect(jsonPath("$.exception").value("org.springframework.http.converter.HttpMessageNotReadableException"))
+			.andExpect(jsonPath("$.message").value("Required request body is missing: public org.springframework.http.ResponseEntity<java.lang.String> mil.dtic.sitemaps.management.controller.SitemapManagerController.addLocations(mil.dtic.sitemaps.management.resources.IndexedLocationList)"))
+			.andExpect(jsonPath("$.path").value("/sitemap-manager"));
+	}
+
+	/**
+	 * If sitemap manager is supposed to allow duplicate URLs/locations then this
+	 * might actually not be a "bad" request. Change to "good" test if that's the case.
+	 * @throws Exception 
+	 */
+	@Test
+	public void testPutDuplicateLocationsInRequest() throws Exception {
+		mockMvc.perform(storedJsonRequest(HttpMethod.PUT, badRequestJsonDir + "duplicateLocationsInRequest.json"))
+			.andExpect(status().isBadRequest())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+			.andExpect(jsonPath("$.timestamp").value(new CloseToNowMatcher()))
+			.andExpect(jsonPath("$.status").value("400"))
+			.andExpect(jsonPath("$.error").value("Bad Request"))
+			.andExpect(jsonPath("$.exception").value("org.springframework.http.converter.HttpMessageNotReadableException"))
+			.andExpect(jsonPath("$.message").value("Required request body is missing: public org.springframework.http.ResponseEntity<java.lang.String> mil.dtic.sitemaps.management.controller.SitemapManagerController.addLocations(mil.dtic.sitemaps.management.resources.IndexedLocationList)"))
+			.andExpect(jsonPath("$.path").value("/sitemap-manager"));
+	}
+
+	@Test
+	public void testPutFutureLastModified() throws Exception {
+		mockMvc.perform(storedJsonRequest(HttpMethod.PUT, badRequestJsonDir + "futureLastModified.json"))
+			.andDo(print())
+			.andExpect(status().isBadRequest())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+			.andExpect(jsonPath("$.timestamp").value(new CloseToNowMatcher()))
+			.andExpect(jsonPath("$.status").value("400"))
+			.andExpect(jsonPath("$.error").value("Bad Request"))
+			.andExpect(jsonPath("$.exception").value("org.springframework.http.converter.HttpMessageNotReadableException"))
+			.andExpect(jsonPath("$.message").value("Required request body is missing: public org.springframework.http.ResponseEntity<java.lang.String> mil.dtic.sitemaps.management.controller.SitemapManagerController.addLocations(mil.dtic.sitemaps.management.resources.IndexedLocationList)"))
+			.andExpect(jsonPath("$.path").value("/sitemap-manager"));
+	}
+
+	@Test
+	public void testPutInvalidUrl() throws Exception {
+		mockMvc.perform(storedJsonRequest(HttpMethod.PUT, badRequestJsonDir + "invalidUrl.json"))
+			.andExpect(status().isBadRequest())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+			.andExpect(jsonPath("$.timestamp").value(new CloseToNowMatcher()))
+			.andExpect(jsonPath("$.status").value("400"))
+			.andExpect(jsonPath("$.error").value("Bad Request"))
+			.andExpect(jsonPath("$.exception").value("org.springframework.http.converter.HttpMessageNotReadableException"))
+			.andExpect(jsonPath("$.message").value("Required request body is missing: public org.springframework.http.ResponseEntity<java.lang.String> mil.dtic.sitemaps.management.controller.SitemapManagerController.addLocations(mil.dtic.sitemaps.management.resources.IndexedLocationList)"))
+			.andExpect(jsonPath("$.path").value("/sitemap-manager"));
+	}
+
+	@Test
+	public void testPutOutOfRangePriority() throws Exception {
+		mockMvc.perform(storedJsonRequest(HttpMethod.PUT, badRequestJsonDir + "outOfRangePriority.json"))
 			.andExpect(status().isBadRequest())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$.timestamp").value(new CloseToNowMatcher()))
