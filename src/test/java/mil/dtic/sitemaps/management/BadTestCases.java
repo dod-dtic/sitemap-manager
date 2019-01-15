@@ -84,9 +84,6 @@ public class BadTestCases {
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$.timestamp").value(new CloseToNowMatcher()))
 			.andExpect(jsonPath("$.status").value("400"))
-			.andExpect(jsonPath("$.error").value("Bad Request"))
-			.andExpect(jsonPath("$.exception").value("org.springframework.http.converter.HttpMessageNotReadableException"))
-			.andExpect(jsonPath("$.message").value("Required request body is missing: public org.springframework.http.ResponseEntity<java.lang.String> mil.dtic.sitemaps.management.controller.SitemapManagerController.addLocations(mil.dtic.sitemaps.management.resources.IndexedLocationList)"))
 			.andExpect(jsonPath("$.path").value("/sitemap-manager"));
 	}
 
@@ -97,9 +94,6 @@ public class BadTestCases {
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$.timestamp").value(new CloseToNowMatcher()))
 			.andExpect(jsonPath("$.status").value("400"))
-			.andExpect(jsonPath("$.error").value("Bad Request"))
-			.andExpect(jsonPath("$.exception").value("org.springframework.http.converter.HttpMessageNotReadableException"))
-			.andExpect(jsonPath("$.message").value("Required request body is missing: public org.springframework.http.ResponseEntity<java.lang.String> mil.dtic.sitemaps.management.controller.SitemapManagerController.addLocations(mil.dtic.sitemaps.management.resources.IndexedLocationList)"))
 			.andExpect(jsonPath("$.path").value("/sitemap-manager"));
 	}
 
@@ -115,9 +109,6 @@ public class BadTestCases {
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$.timestamp").value(new CloseToNowMatcher()))
 			.andExpect(jsonPath("$.status").value("400"))
-			.andExpect(jsonPath("$.error").value("Bad Request"))
-			.andExpect(jsonPath("$.exception").value("org.springframework.http.converter.HttpMessageNotReadableException"))
-			.andExpect(jsonPath("$.message").value("Required request body is missing: public org.springframework.http.ResponseEntity<java.lang.String> mil.dtic.sitemaps.management.controller.SitemapManagerController.addLocations(mil.dtic.sitemaps.management.resources.IndexedLocationList)"))
 			.andExpect(jsonPath("$.path").value("/sitemap-manager"));
 	}
 
@@ -129,9 +120,6 @@ public class BadTestCases {
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$.timestamp").value(new CloseToNowMatcher()))
 			.andExpect(jsonPath("$.status").value("400"))
-			.andExpect(jsonPath("$.error").value("Bad Request"))
-			.andExpect(jsonPath("$.exception").value("org.springframework.http.converter.HttpMessageNotReadableException"))
-			.andExpect(jsonPath("$.message").value("Required request body is missing: public org.springframework.http.ResponseEntity<java.lang.String> mil.dtic.sitemaps.management.controller.SitemapManagerController.addLocations(mil.dtic.sitemaps.management.resources.IndexedLocationList)"))
 			.andExpect(jsonPath("$.path").value("/sitemap-manager"));
 	}
 
@@ -142,9 +130,6 @@ public class BadTestCases {
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$.timestamp").value(new CloseToNowMatcher()))
 			.andExpect(jsonPath("$.status").value("400"))
-			.andExpect(jsonPath("$.error").value("Bad Request"))
-			.andExpect(jsonPath("$.exception").value("org.springframework.http.converter.HttpMessageNotReadableException"))
-			.andExpect(jsonPath("$.message").value("Required request body is missing: public org.springframework.http.ResponseEntity<java.lang.String> mil.dtic.sitemaps.management.controller.SitemapManagerController.addLocations(mil.dtic.sitemaps.management.resources.IndexedLocationList)"))
 			.andExpect(jsonPath("$.path").value("/sitemap-manager"));
 	}
 
@@ -155,9 +140,6 @@ public class BadTestCases {
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$.timestamp").value(new CloseToNowMatcher()))
 			.andExpect(jsonPath("$.status").value("400"))
-			.andExpect(jsonPath("$.error").value("Bad Request"))
-			.andExpect(jsonPath("$.exception").value("org.springframework.http.converter.HttpMessageNotReadableException"))
-			.andExpect(jsonPath("$.message").value("Required request body is missing: public org.springframework.http.ResponseEntity<java.lang.String> mil.dtic.sitemaps.management.controller.SitemapManagerController.addLocations(mil.dtic.sitemaps.management.resources.IndexedLocationList)"))
 			.andExpect(jsonPath("$.path").value("/sitemap-manager"));
 	}
 
@@ -174,9 +156,6 @@ public class BadTestCases {
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$.timestamp").value(new CloseToNowMatcher()))
 			.andExpect(jsonPath("$.status").value("400"))
-			.andExpect(jsonPath("$.error").value("Bad Request"))
-			.andExpect(jsonPath("$.exception").value("org.springframework.http.converter.HttpMessageNotReadableException"))
-			.andExpect(jsonPath("$.message").value("Required request body is missing: public org.springframework.http.ResponseEntity<java.lang.String> mil.dtic.sitemaps.management.controller.SitemapManagerController.addLocations(mil.dtic.sitemaps.management.resources.IndexedLocationList)"))
 			.andExpect(jsonPath("$.path").value("/sitemap-manager"));
 	}
 
@@ -187,9 +166,6 @@ public class BadTestCases {
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$.timestamp").value(new CloseToNowMatcher()))
 			.andExpect(jsonPath("$.status").value("400"))
-			.andExpect(jsonPath("$.error").value("Bad Request"))
-			.andExpect(jsonPath("$.exception").value("org.springframework.http.converter.HttpMessageNotReadableException"))
-			.andExpect(jsonPath("$.message").value("Required request body is missing: public org.springframework.http.ResponseEntity<java.lang.String> mil.dtic.sitemaps.management.controller.SitemapManagerController.addLocations(mil.dtic.sitemaps.management.resources.IndexedLocationList)"))
 			.andExpect(jsonPath("$.path").value("/sitemap-manager"));
 	}
 
@@ -205,9 +181,6 @@ public class BadTestCases {
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$.timestamp").value(new CloseToNowMatcher()))
 			.andExpect(jsonPath("$.status").value("400"))
-			.andExpect(jsonPath("$.error").value("Bad Request"))
-			.andExpect(jsonPath("$.exception").value("org.springframework.http.converter.HttpMessageNotReadableException"))
-			.andExpect(jsonPath("$.message").value("Required request body is missing: public org.springframework.http.ResponseEntity<java.lang.String> mil.dtic.sitemaps.management.controller.SitemapManagerController.addLocations(mil.dtic.sitemaps.management.resources.IndexedLocationList)"))
 			.andExpect(jsonPath("$.path").value("/sitemap-manager"));
 	}
 
@@ -219,9 +192,6 @@ public class BadTestCases {
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$.timestamp").value(new CloseToNowMatcher()))
 			.andExpect(jsonPath("$.status").value("400"))
-			.andExpect(jsonPath("$.error").value("Bad Request"))
-			.andExpect(jsonPath("$.exception").value("org.springframework.http.converter.HttpMessageNotReadableException"))
-			.andExpect(jsonPath("$.message").value("Required request body is missing: public org.springframework.http.ResponseEntity<java.lang.String> mil.dtic.sitemaps.management.controller.SitemapManagerController.addLocations(mil.dtic.sitemaps.management.resources.IndexedLocationList)"))
 			.andExpect(jsonPath("$.path").value("/sitemap-manager"));
 	}
 
@@ -232,9 +202,6 @@ public class BadTestCases {
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$.timestamp").value(new CloseToNowMatcher()))
 			.andExpect(jsonPath("$.status").value("400"))
-			.andExpect(jsonPath("$.error").value("Bad Request"))
-			.andExpect(jsonPath("$.exception").value("org.springframework.http.converter.HttpMessageNotReadableException"))
-			.andExpect(jsonPath("$.message").value("Required request body is missing: public org.springframework.http.ResponseEntity<java.lang.String> mil.dtic.sitemaps.management.controller.SitemapManagerController.addLocations(mil.dtic.sitemaps.management.resources.IndexedLocationList)"))
 			.andExpect(jsonPath("$.path").value("/sitemap-manager"));
 	}
 
@@ -245,9 +212,6 @@ public class BadTestCases {
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$.timestamp").value(new CloseToNowMatcher()))
 			.andExpect(jsonPath("$.status").value("400"))
-			.andExpect(jsonPath("$.error").value("Bad Request"))
-			.andExpect(jsonPath("$.exception").value("org.springframework.http.converter.HttpMessageNotReadableException"))
-			.andExpect(jsonPath("$.message").value("Required request body is missing: public org.springframework.http.ResponseEntity<java.lang.String> mil.dtic.sitemaps.management.controller.SitemapManagerController.addLocations(mil.dtic.sitemaps.management.resources.IndexedLocationList)"))
 			.andExpect(jsonPath("$.path").value("/sitemap-manager"));
 	}
 }
