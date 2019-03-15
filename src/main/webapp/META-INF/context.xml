@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/${context.path}">
+    <Parameter name="spring.config.location" value="${spring.config.location}"/>
+</Context>

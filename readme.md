@@ -41,8 +41,8 @@ The configuration properties are listed and described here:
         - never
 
 ## Usage
-### Adding URLs
-To add URLs to the list of tracked URLs within the xml sitemaps, use a `POST` request against `/sitemap-manager` with an object structure as described:
+### Adding URLs (detailed)
+To add URLs to the list of tracked URLs within the xml sitemaps, use a `POST` request against `/` with an object structure as described:
 
 ```json
 {
@@ -81,8 +81,28 @@ Example:
 
 If a POST request is received that contains locations that are already tracked, those locations will be treated as update requests.
 
-### Updating properties of existing URLs
-To update the properties of URLs that are already tracked within the xml sitemaps, use a `PUT` request against `/sitemap-manager` with an object structure as described:
+### Adding URLs (simple/bulk)
+To quickly add URLs with only default values to the list of tracked URLs within the xml sitemaps, use a `POST` request against `/simple` with a `text/plain` body consisting of a list of URLs (one per line):
+
+Example:
+```
+http://www.dtic.mil/docs/citations/AD0037339
+http://www.dtic.mil/docs/citations/AD1000195
+http://www.dtic.mil/docs/citations/AD1000196
+http://www.dtic.mil/docs/citations/AD1000263
+http://www.dtic.mil/docs/citations/AD1000433
+http://www.dtic.mil/docs/citations/AD1000436
+http://www.dtic.mil/docs/citations/AD1000553
+http://www.dtic.mil/docs/citations/AD1000556
+http://www.dtic.mil/docs/citations/AD1000603
+http://www.dtic.mil/docs/citations/AD1000610
+http://www.dtic.mil/docs/citations/AD1000771
+```
+
+If a POST request is received that contains locations that are already tracked, those locations will be treated as update requests.
+
+### Updating properties of existing URLs (detailed)
+To update the properties of URLs that are already tracked within the xml sitemaps, use a `PUT` request against `/` with an object structure as described:
 
 ```json
 {
@@ -114,8 +134,28 @@ Example:
 
 If a PUT request is received that contains locations that are not already tracked, those locations will be treated as create requests.
 
-### Removing URLs from sitemaps
-To remove URLs that are already tracked within the xml sitemaps, use a `DELETE` request against `/sitemap-manager` with an object structure as described:
+### Updating URLs (simple/bulk)
+To quickly change the last modified date of a list of URLs, use a `PUT` request against `/simple` with a `text/plain` body consisting of a list of URLs (one per line):
+
+Example:
+```
+http://www.dtic.mil/docs/citations/AD0037339
+http://www.dtic.mil/docs/citations/AD1000195
+http://www.dtic.mil/docs/citations/AD1000196
+http://www.dtic.mil/docs/citations/AD1000263
+http://www.dtic.mil/docs/citations/AD1000433
+http://www.dtic.mil/docs/citations/AD1000436
+http://www.dtic.mil/docs/citations/AD1000553
+http://www.dtic.mil/docs/citations/AD1000556
+http://www.dtic.mil/docs/citations/AD1000603
+http://www.dtic.mil/docs/citations/AD1000610
+http://www.dtic.mil/docs/citations/AD1000771
+```
+
+If a PUT request is received that contains locations that are not already tracked, those locations will be treated as bulk create requests (utilizing default values for all fields other than the URL).
+
+### Removing URLs from sitemaps (detailed)
+To remove URLs that are already tracked within the xml sitemaps, use a `DELETE` request against `/` with an object structure as described:
 
 ```json
 {
@@ -144,4 +184,22 @@ Example:
         }
     ]
 }
+```
+
+### Removing URLs  from sitemaps (simple/bulk)
+To remove URLs that are already tracked within the xml sitemaps, use a `DELETE` request against `/simple` with a `text/plain` body consisting of a list of URLs (one per line):
+
+Example:
+```
+http://www.dtic.mil/docs/citations/AD0037339
+http://www.dtic.mil/docs/citations/AD1000195
+http://www.dtic.mil/docs/citations/AD1000196
+http://www.dtic.mil/docs/citations/AD1000263
+http://www.dtic.mil/docs/citations/AD1000433
+http://www.dtic.mil/docs/citations/AD1000436
+http://www.dtic.mil/docs/citations/AD1000553
+http://www.dtic.mil/docs/citations/AD1000556
+http://www.dtic.mil/docs/citations/AD1000603
+http://www.dtic.mil/docs/citations/AD1000610
+http://www.dtic.mil/docs/citations/AD1000771
 ```

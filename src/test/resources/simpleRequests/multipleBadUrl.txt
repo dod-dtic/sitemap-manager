@@ -1,0 +1,3 @@
+htp:/wwwdticmil/docs\\/citations/AD0037339
+foobar
+http://....../docs/citations/AD0037339

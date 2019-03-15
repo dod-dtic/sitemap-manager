@@ -10,12 +10,21 @@ import mil.dtic.sitemaps.management.resources.IndexedLocation;
 import mil.dtic.sitemaps.management.resources.domain.ObjectFactory;
 import mil.dtic.sitemaps.management.resources.domain.TUrl;
 
+/**
+ * Factory for URLs
+ * @author Battelle
+ */
 @Component
 public class UrlFactory {
 
     @Autowired
     protected SitemapManagerConfiguration configuration;
     
+    /**
+     * Create a new URL from a given location
+     * @param location Location from which to create a URL
+     * @return URL for given location
+     */
     public TUrl createTUrl (IndexedLocation location) {
     	ObjectFactory objectFactory = new ObjectFactory();
     	TUrl returnUrl = objectFactory.createTUrl();
@@ -23,13 +32,19 @@ public class UrlFactory {
     	return updateTUrl(returnUrl, location);
     }
     
+    /**
+     * Update TUrl object with given location
+     * @param url URL to update
+     * @param location Location from which to update URL
+     * @return TUrl passed in as argument
+     */
     public TUrl updateTUrl (TUrl url, IndexedLocation location) {
     	url.setLoc(location.getLocation());
     	
-    	//only update this value if given a non-null value, or if a default is needed
+    	// update with value if given, else use current time 
     	if(location.getLastModified() != null) {
     		url.setLastmod(location.getLastModified());
-    	} else if(url.getLastmod() == null) {
+    	} else {
     		url.setLastmod(new Date());
     	}
 
